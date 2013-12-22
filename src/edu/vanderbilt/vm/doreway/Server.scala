@@ -1,8 +1,8 @@
-package edu.vanderbilt.vm.guidedore
+package edu.vanderbilt.vm.doreway
 
-import akka.actor.Actor
+import scala.actors.Actor
 
-class Server extends Actor {
+class Server {
 
   val mList = List(
       Place(0, 0, List.empty, "Mock Place 1", "", "", List.empty, 1),
@@ -10,9 +10,5 @@ class Server extends Actor {
       Place(0, 0, List.empty, "Mock Place 3", "", "", List.empty, 3),
       Place(0, 0, List.empty, "Mock Place 4", "", "", List.empty, 4))
   
-  def receive = {
-    case "PlaceList" => {}//sender ! PlaceList(mList)
-    case _ => {}
-  }
   
 }

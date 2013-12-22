@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.guidedore
+package edu.vanderbilt.vm.doreway
 
 case class MediaLocation(mediatype: MediaType, location: String) {}
 

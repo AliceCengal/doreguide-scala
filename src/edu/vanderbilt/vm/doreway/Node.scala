@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.guidedore
+package edu.vanderbilt.vm.doreway
 
 case class Node(
     id: Int, 

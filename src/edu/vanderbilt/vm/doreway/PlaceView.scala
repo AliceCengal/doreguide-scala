@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.guidedore
+package edu.vanderbilt.vm.doreway
 
 import android.content.Context
 import android.view.ViewGroup
