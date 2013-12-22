@@ -49,3 +49,6 @@ out/
 # vim artifact
 *.swp
 
+# Since we're building with Maven, this folder is only here for Eclipse to reference,
+# because autocomplete is cool.
+libs
