@@ -4,8 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.graphics.Color
 import java.io.StringReader
-
-import edu.vanderbilt.vm.doreway.R;
 import android.widget.TextView
 import android.app.ActionBar
 import android.view.View
@@ -13,6 +11,7 @@ import android.view.View.OnClickListener
 import android.widget.Toast
 import scala.actors.Actor
 import android.view.Menu
+import edu.vanderbilt.vm.doreguide.utils.MessageUtil
 
 class MainActivity extends Activity
     with ActivityUtil
@@ -30,7 +29,7 @@ class MainActivity extends Activity
     c
   }
 
-  def logId = "DoreWay::MainActivity"
+  def logId = "DoreGuide::MainActivity"
 
   override def onCreate(saved: Bundle) {
     super.onCreate(saved)
@@ -69,8 +68,8 @@ class MainActivity extends Activity
   private def setupActionBar {
     mAction setNavigationMode           ActionBar.NAVIGATION_MODE_TABS
     mAction setDisplayShowTitleEnabled  true
-    mAction setBackgroundDrawable       DoreWay.DECENT_GOLD
-    mAction setSplitBackgroundDrawable  DoreWay.DECENT_GOLD
+    mAction setBackgroundDrawable       DoreGuide.DECENT_GOLD
+    mAction setSplitBackgroundDrawable  DoreGuide.DECENT_GOLD
     mAction setTitle                    "Vanderbilt University"
   }
 

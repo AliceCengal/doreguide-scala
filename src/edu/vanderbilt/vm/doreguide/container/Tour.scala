@@ -1,4 +1,6 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.container
+
+import com.google.gson.stream.JsonReader
 
 case class Tour( places: List[Place]
                , timeRequired: String
@@ -17,8 +19,37 @@ case class Tour( places: List[Place]
 }
 
 object Tour {
-  def bulder: TourBuilder = new ITourBuilder
   val DEFAULT_ID = -1
+  
+  val TAG_ID = "id"
+  val TAG_NAME = "name"
+  val TAG_TIMEREQ = "timeRequired"
+  val TAG_PLACES = "placesOnTour"
+  val TAG_DESC = "description"
+  val TAG_DIST = "distance"
+  val TAG_ICON = "iconPath"
+  
+  def builder: TourBuilder = new ITourBuilder
+  
+  def buildFromJson(reader: JsonReader): Tour = {
+    val bldr = builder
+    reader.beginObject()
+    while (reader.hasNext()) {
+      val n = reader.nextName()
+      n match {
+        case TAG_ID      => bldr.setId(reader.nextInt())
+        case TAG_NAME    => bldr.setName(reader.nextString())
+        case TAG_DESC    => bldr.setDescription(reader.nextString())
+        case TAG_TIMEREQ => bldr.setTimeReq(reader.nextString())
+        case TAG_PLACES  => {}
+        case TAG_DIST    => {}
+        case TAG_ICON    => {}
+      }
+    }
+    reader.endObject()
+    bldr.build
+  }
+    
 }
 
 trait TourBuilder {

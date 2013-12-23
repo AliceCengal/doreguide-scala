@@ -3,6 +3,7 @@ package edu.vanderbilt.vm.doreguide
 import scala.actors.Actor
 import android.content.Context
 import android.location.Criteria
+import edu.vanderbilt.vm.doreguide.utils.Request
 
 class Geomancer extends Actor
     with LogUtil
@@ -10,7 +11,7 @@ class Geomancer extends Actor
 
   private var mLocation = null
 
-  def logId = "DoreWay::Geomancer"
+  def logId = "DoreGuide::Geomancer"
 
   def act() {
     loop {

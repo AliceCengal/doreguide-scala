@@ -7,7 +7,7 @@ import java.net.URL
 
 class NodeServer extends Actor with LogUtil {
 
-  def logId = "DoreWay::NodeManager"
+  def logId = "DoreGuide::NodeManager"
 
   def act() {
     loop {

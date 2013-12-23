@@ -1,11 +1,15 @@
 package edu.vanderbilt.vm.doreguide
 
 import scala.actors.Actor
+import com.google.gson.stream.JsonReader
+import java.io.InputStreamReader
+import java.net.URL
 
 class TourServer extends Actor with LogUtil {
 
-  def logId = "DoreWay::TourServer"
-
+  def logId = "DoreGuide::TourServer"
+  private var mTourData: List[Tour] = List.empty
+    
   def act() {
     loop {
       react {
@@ -16,6 +20,14 @@ class TourServer extends Actor with LogUtil {
 
   def initialize {
 
+    val reader = new JsonReader(
+        new InputStreamReader(
+            new URL(TourServer.rawDataUrl).openConnection.getInputStream))
+    
+    reader.beginArray()
+    while(reader.hasNext())
+      
+    
   }
 }
 

@@ -4,8 +4,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.content.Context
 import scala.actors.Actor
+import edu.vanderbilt.vm.doreguide.container.Place
 
-object DoreWay {
+object DoreGuide {
 
   /** This is the gold usually found on sports apparel */
   val DECENT_GOLD = new ColorDrawable(Color.rgb(182, 144, 0))

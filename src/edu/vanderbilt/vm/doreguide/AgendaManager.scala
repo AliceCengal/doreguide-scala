@@ -5,7 +5,7 @@ import scala.actors.Actor
 class AgendaManager extends Actor
     with LogUtil {
 
-  def logId = "DoreWay::AgendaManager"
+  def logId = "DoreGuide::AgendaManager"
 
   def act() {
     initializeData

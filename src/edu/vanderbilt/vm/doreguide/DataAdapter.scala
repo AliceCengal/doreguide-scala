@@ -3,6 +3,7 @@ package edu.vanderbilt.vm.doreguide
 import android.widget.BaseAdapter
 import android.view.ViewGroup
 import android.view.View
+import edu.vanderbilt.vm.doreguide.container.DataObject
 
 class DataAdapter(
     dataList: List[DataObject], 

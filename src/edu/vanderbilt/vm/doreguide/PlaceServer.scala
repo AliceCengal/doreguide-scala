@@ -7,6 +7,8 @@ import scala.io.Source
 import scala.io.Codec
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
+import edu.vanderbilt.vm.doreguide.container.Place
+import edu.vanderbilt.vm.doreguide.utils.Request
 
 class PlaceServer extends Actor
     with LogUtil {
@@ -14,7 +16,7 @@ class PlaceServer extends Actor
   var mPlaceData: List[Place] = List.empty
   private var count: Int = 0
 
-  override def logId = "DoreWay::Server";
+  override def logId = "DoreGuide::Server";
 
   def act() {
     loop {

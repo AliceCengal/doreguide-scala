@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import edu.vanderbilt.vm.doreguide.container.Place
 
 class PlaceView(ctx: Context) extends ViewHolder {
   

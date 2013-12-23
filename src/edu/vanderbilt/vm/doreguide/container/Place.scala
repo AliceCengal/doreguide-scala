@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.container
 
 import com.google.gson.stream.JsonReader
 
@@ -21,8 +21,6 @@ case class Place( latitude: Double
 }
 
 object Place {
-  def builder: PlaceBuilder = new IPlaceBuilder
-
   val DEFAULT_ID    = -1
   val MAX_PLACE_ID  = 9999 // Largest Id allowed for a place
 
@@ -37,30 +35,32 @@ object Place {
   val TAG_LAT       = "latitude"
   val TAG_LON       = "longitude"
 
+  def builder: PlaceBuilder = new IPlaceBuilder
+    
   def buildFromJson(reader: JsonReader): Place = {
     val bldr = builder
-    reader.beginObject
+    reader.beginObject()
     while (reader.hasNext) {
-      val n = reader.nextName
+      val n = reader.nextName()
       n match {
-        case TAG_ID   => bldr.setId(reader.nextInt)
-        case TAG_NAME => bldr.setName(reader.nextString)
-        case TAG_DESC => bldr.setDescription(reader.nextString)
+        case TAG_ID   => bldr.setId(reader.nextInt())
+        case TAG_NAME => bldr.setName(reader.nextString())
+        case TAG_DESC => bldr.setDescription(reader.nextString())
         case TAG_CAT =>
-          reader.beginArray
+          reader.beginArray()
           while (reader.hasNext)
-            bldr.addCategory(PlaceCategory.fromName(reader.nextString))
-          reader.endArray
-        case TAG_HOURS => bldr.setHours(reader.nextString)
-        case TAG_IMAGE => bldr.addMedia(MediaLocation(ImageMedia(), reader.nextString))
-        case TAG_AUDIO => bldr.addMedia(MediaLocation(AudioMedia(), reader.nextString))
-        case TAG_VIDEO => bldr.addMedia(MediaLocation(VideoMedia(), reader.nextString))
-        case TAG_LAT   => bldr.setLatitude(reader.nextDouble)
-        case TAG_LON   => bldr.setLongitude(reader.nextDouble)
-        case _         => reader.skipValue
+            bldr.addCategory(PlaceCategory.fromName(reader.nextString()))
+          reader.endArray()
+        case TAG_HOURS => bldr.setHours(reader.nextString())
+        case TAG_IMAGE => bldr.addMedia(MediaLocation(ImageMedia(), reader.nextString()))
+        case TAG_AUDIO => bldr.addMedia(MediaLocation(AudioMedia(), reader.nextString()))
+        case TAG_VIDEO => bldr.addMedia(MediaLocation(VideoMedia(), reader.nextString()))
+        case TAG_LAT   => bldr.setLatitude(reader.nextDouble())
+        case TAG_LON   => bldr.setLongitude(reader.nextDouble())
+        case _         => reader.skipValue()
       }
     }
-    reader.endObject
+    reader.endObject()
     bldr.build
   }
 
