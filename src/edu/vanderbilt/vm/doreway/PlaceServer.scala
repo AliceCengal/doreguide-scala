@@ -8,48 +8,44 @@ import scala.io.Codec
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 
-class Server extends Actor
+class PlaceServer extends Actor
     with LogUtil {
 
   var mPlaceData: List[Place] = List.empty
   private var count: Int = 0
 
-  override def logId = "DoreWay::Server"
+  override def logId = "DoreWay::Server";
 
   def act() {
-    initializeData
     loop {
       react {
-        case Initialize(ctx) =>
-          initializeData
-
-        case Server.Incre =>
+        case Initialize(ctx) => initializeData
+        case PlaceServer.Incre =>
           count = count + 1
           debug("Incre received")
 
         case Request(requester, message) =>
           message match {
-            case Server.Get =>
-              requester ! Server.Count(count)
+            case PlaceServer.Get =>
+              requester ! PlaceServer.Count(count)
               debug("Get received in a Request")
-            case Server.GetPlaceWithId(id) =>
+            case PlaceServer.GetPlaceWithId(id) =>
               if (id >= 0 && id < 9999 && mPlaceData.length != 0)
                 requester ! PlaceList(List(mPlaceData(id)))
-                
-            case Server.GetAllPlaces =>
+
+            case PlaceServer.GetAllPlaces =>
               requester ! PlaceList(mPlaceData)
           }
 
-        case a: Any => { debug("Message not understood: " + a) }
+        case _ => { debug("Message not understood") }
       }
     }
   }
 
   def initializeData {
-
     val reader = new JsonReader(
       new InputStreamReader(
-        new URL(Server.rawDataUrl).openConnection().getInputStream))
+        (new URL(PlaceServer.rawDataUrl)).openConnection().getInputStream))
 
     reader.beginArray()
     while (reader.hasNext()) {
@@ -60,7 +56,7 @@ class Server extends Actor
 
 }
 
-object Server {
+object PlaceServer {
   case class Incre
   case class Get
   case class Count(c: Int)

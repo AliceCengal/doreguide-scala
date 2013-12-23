@@ -22,8 +22,9 @@ class MainActivity extends Activity
   lazy val mView = new TextView(this)
 
   val mCounter: Actor = {
-    val c = new Server()
+    val c = new PlaceServer()
     c.start()
+    c ! Initialize(this)
     c
   }
 
@@ -38,17 +39,17 @@ class MainActivity extends Activity
     setupActionBar
 
     click(mView) {
-      mCounter ! Server.Incre
-      request(mCounter) { Server.Get }
+      mCounter ! PlaceServer.Incre
+      request(mCounter) { PlaceServer.Get }
       debug("TextView clicked")
     }
 
   }
 
   onReact {
-    case Server.Count(count) => onUi {
+    case PlaceServer.Count(count) => onUi {
       debug("Count received")
-      request(mCounter) { Server.GetPlaceWithId(count % 10) }
+      request(mCounter) { PlaceServer.GetPlaceWithId(count % 10) }
     }
 
     case PlaceList(list) => onUi {

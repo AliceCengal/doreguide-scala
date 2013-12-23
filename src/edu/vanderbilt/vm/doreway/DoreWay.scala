@@ -3,6 +3,7 @@ package edu.vanderbilt.vm.doreway
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.content.Context
+import scala.actors.Actor
 
 object DoreWay {
 
@@ -26,6 +27,20 @@ object DoreWay {
 
 }
 
+/**
+ * Message for the proxy actors to initialze their state. This include downloading json
+ * from servers and loading config files from storage. This is should be emmited by the
+ * master controller to its servants at the start of the application.
+ */
 case class Initialize(ctx: Context)
+
+/**
+ * Message for passing Place data between Actors.
+ */
 case class PlaceList(list: List[Place])
+
+/**
+ * Message to signify that the application may be closing. Receipients should save any
+ * persistent data and configs to storage or to server. 
+ */
 case class Goodbye(ctx: Context)
