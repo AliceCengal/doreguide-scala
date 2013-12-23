@@ -18,7 +18,7 @@ class PlaceServer extends Actor
 
   override def logId = "DoreGuide::Server";
 
-  def act() {
+  override def act() {
     loop {
       react {
         case Initialize(ctx) => initializeData
@@ -44,7 +44,7 @@ class PlaceServer extends Actor
     }
   }
 
-  def initializeData {
+  private def initializeData {
     val reader = new JsonReader(
       new InputStreamReader(
         (new URL(PlaceServer.rawDataUrl)).openConnection().getInputStream))

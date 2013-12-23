@@ -4,13 +4,15 @@ import scala.actors.Actor
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import java.net.URL
+import edu.vanderbilt.vm.doreguide.container.Tour
 
 class TourServer extends Actor with LogUtil {
 
-  def logId = "DoreGuide::TourServer"
   private var mTourData: List[Tour] = List.empty
-    
-  def act() {
+  
+  override def logId = "DoreGuide::TourServer"
+  
+  override def act() {
     loop {
       react {
         case Initialize(ctx) => initialize
@@ -18,15 +20,15 @@ class TourServer extends Actor with LogUtil {
     }
   }
 
-  def initialize {
+  private def initialize {
 
     val reader = new JsonReader(
         new InputStreamReader(
             new URL(TourServer.rawDataUrl).openConnection.getInputStream))
     
     reader.beginArray()
-    while(reader.hasNext())
-      
+    while(reader.hasNext()) { mTourData = Tour.buildFromJson(reader) :: mTourData }
+    reader.endArray()
     
   }
 }

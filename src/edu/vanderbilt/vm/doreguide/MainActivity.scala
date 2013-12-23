@@ -22,26 +22,21 @@ class MainActivity extends Activity
   lazy val mAction = getActionBar
   lazy val mView = new TextView(this)
 
-  val mCounter: Actor = {
-    val c = new PlaceServer()
-    c.start()
-    c ! Initialize(this)
-    c
-  }
-
   def logId = "DoreGuide::MainActivity"
 
   override def onCreate(saved: Bundle) {
     super.onCreate(saved)
 
+    DoreGuide.initialize(this)
+    
     mView.setText("Hello")
     setContentView(mView)
 
     setupActionBar
 
     click(mView) {
-      mCounter ! PlaceServer.Incre
-      request(mCounter) { PlaceServer.Get }
+      DoreGuide.placeServer ! PlaceServer.Incre
+      request(DoreGuide.placeServer) { PlaceServer.Get }
       debug("TextView clicked")
     }
 
@@ -50,7 +45,7 @@ class MainActivity extends Activity
   onReact {
     case PlaceServer.Count(count) => onUi {
       debug("Count received")
-      request(mCounter) { PlaceServer.GetPlaceWithId(count % 10) }
+      request(DoreGuide.placeServer) { PlaceServer.GetPlaceWithId(count % 10) }
     }
 
     case PlaceList(list) => onUi {

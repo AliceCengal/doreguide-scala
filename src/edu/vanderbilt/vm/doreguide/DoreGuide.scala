@@ -13,13 +13,13 @@ object DoreGuide extends LogUtil {
     a.start()
     a
   }
-  
+  /*
   val nodeServer: Actor = {
     val a = new NodeServer()
     a.start()
     a
   }
-  
+  */
   val agendaManager: Actor = {
     val a = new AgendaManager()
     a.start()
