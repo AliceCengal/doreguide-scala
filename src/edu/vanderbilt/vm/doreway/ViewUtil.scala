@@ -1,11 +1,11 @@
 package edu.vanderbilt.vm.doreway
 
-import scala.actors.Actor._
-import scala.actors.Actor
 import android.app.Activity
 import android.widget.Button
 import android.widget.TextView
 import android.view.View
+import scala.actors.Actor
+import android.view.View.OnClickListener
 
 /**
  * Converts an activity into an actor
@@ -64,34 +64,12 @@ trait ActivityUtil {
 
     def component[T](id: Int) =
         self.findViewById(id).asInstanceOf[T]
-}
-
-/**
- * Implicit conversions to implement listeners
- * for example, View onClickListener
- */
-object ViewConversions {
-    implicit def toClickListener(bt: Button) : ButtonViewConversions = {
-        new ButtonViewConversions(bt)
+    
+    def click(v: View) (block: => Unit) {
+      v.setOnClickListener(new OnClickListener() {
+        override def onClick(v: View) { block }})
     }
+    
 }
 
-/**
- * ButtonViewConversions to execute a function with an inner OnClickListener
- */
-class ButtonViewConversions(bt: Button) {
-    type F = (View) => Unit
 
-    def onClicked(block : => Unit): Unit =
-        onClicked( (v: View) => block)
-
-    def onClicked(f: F): Unit = {
-        bt.setOnClickListener(
-            new View.OnClickListener() {
-                def onClick(v: View) {
-                    f(v)
-                }
-            }
-        )
-    }
-}

@@ -14,7 +14,7 @@ case class Node(
 object Node {
   
   val DEFAULT_ID = -1
-  val DEGPERRAD = 180/Math.PI
+  val DEGPERRAD = 180/ java.lang.Math.PI
   val EPSILON = 0.000001 // Resolution of the Node network
   val RADIUS_EARTH = 6371 // kilometers
   def simpleNode(lat: Double, lon: Double) = 

@@ -9,7 +9,7 @@
 	<name>DoreWay</name>
 
 	<properties>
-		<scala.version>2.10.3</scala.version>
+		<scala.version>2.9.2</scala.version>
 	</properties>
 
 	<dependencies>
@@ -30,6 +30,7 @@
 		  <version>2.2.4</version>
 		</dependency> 
   </dependencies>
+  
 	<profiles>
 		<profile>
 			<id>release</id>
