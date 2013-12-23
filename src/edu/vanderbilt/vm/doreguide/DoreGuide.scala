@@ -6,8 +6,32 @@ import android.content.Context
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.container.Place
 
-object DoreGuide {
+object DoreGuide extends LogUtil {
 
+  val placeServer: Actor = {
+    val a = new PlaceServer()
+    a.start()
+    a
+  }
+  
+  val nodeServer: Actor = {
+    val a = new NodeServer()
+    a.start()
+    a
+  }
+  
+  val agendaManager: Actor = {
+    val a = new AgendaManager()
+    a.start()
+    a
+  }
+  
+  val tourServer: Actor = {
+    val a = new TourServer()
+    a.start()
+    a
+  }
+  
   /** This is the gold usually found on sports apparel */
   val DECENT_GOLD = new ColorDrawable(Color.rgb(182, 144, 0))
 
@@ -26,6 +50,21 @@ object DoreGuide {
   /** white */
   val WHITE = new ColorDrawable(Color.WHITE)
 
+  override def logId = "DoreGuide::DoreGuide"
+  
+  def initialize(ctx: Context): Unit = {
+    placeServer ! Initialize(ctx)
+    //nodeServer ! Initialize(ctx)
+    agendaManager ! Initialize(ctx)
+    tourServer ! Initialize(ctx)
+  }
+  
+  def goodbye(ctx: Context): Unit = {
+    placeServer ! Goodbye(ctx)
+    //nodeServer ! Goodbye(ctx)
+    agendaManager ! Goodbye(ctx)
+    tourServer ! Goodbye(ctx)
+  }
 }
 
 /**

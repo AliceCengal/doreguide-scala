@@ -13,7 +13,7 @@ import edu.vanderbilt.vm.doreguide.utils.Request
 class PlaceServer extends Actor
     with LogUtil {
 
-  var mPlaceData: List[Place] = List.empty
+  private var mPlaceData: List[Place] = List.empty
   private var count: Int = 0
 
   override def logId = "DoreGuide::Server";
