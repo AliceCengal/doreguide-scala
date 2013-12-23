@@ -12,39 +12,39 @@ import android.util.Log
  * Converts an activity into an actor
  * to receive events from another actors or services
  * using onReact function
- * 
+ *
  * SOURCE: https://github.com/jgoday/sample_android_scala_actor
  */
 trait Reactive extends Actor {
-    self: Activity with ActivityUtil =>
+  self: Activity with ActivityUtil =>
 
-    private var reactiveFunctions: PartialFunction[Any, Unit] = _
+  private var reactiveFunctions: PartialFunction[Any, Unit] = _
 
-    def act() {
-        loop {
-            react {
-                reactiveFunctions
-            }
-        }
+  def act() {
+    loop {
+      react {
+        reactiveFunctions
+      }
     }
+  }
 
-    def onReact(pf: PartialFunction[Any, Unit]): Unit = {
-        startReacting
+  def onReact(pf: PartialFunction[Any, Unit]): Unit = {
+    startReacting
 
-        reactiveFunctions = pf
-    }
+    reactiveFunctions = pf
+  }
 
-    protected def onUi(block : => Unit) {
-        self.runOnUiThread(new Runnable() {
-            override def run() {
-                block
-            }
-        })
-    }
+  protected def onUi(block: => Unit) {
+    self.runOnUiThread(new Runnable() {
+      override def run() {
+        block
+      }
+    })
+  }
 
-    private def startReacting = {
-        this.start
-    }
+  private def startReacting = {
+    this.start
+  }
 }
 
 /**
@@ -53,24 +53,25 @@ trait Reactive extends Actor {
  * Access to the main application throught app
  */
 trait ActivityUtil {
-    self: Activity =>
+  self: Activity =>
 
-    def app: App = self.getApplication.asInstanceOf[App]
+  def app: App = self.getApplication.asInstanceOf[App]
 
-    def button(id: Int) =
-        component[Button](id)
+  def button(id: Int) =
+    component[Button](id)
 
-    def textView(id: Int) =
-        component[TextView](id)
+  def textView(id: Int) =
+    component[TextView](id)
 
-    def component[T](id: Int) =
-        self.findViewById(id).asInstanceOf[T]
-    
-    def click(v: View) (block: => Unit) {
-      v.setOnClickListener(new OnClickListener() {
-        override def onClick(v: View) { block }})
-    }
-    
+  def component[T](id: Int) =
+    self.findViewById(id).asInstanceOf[T]
+
+  def click(v: View)(block: => Unit) {
+    v.setOnClickListener(new OnClickListener() {
+      override def onClick(v: View) { block }
+    })
+  }
+
 }
 
 object LogUtil {
@@ -79,12 +80,12 @@ object LogUtil {
 
 trait LogUtil {
   def logId: String
-  
+
   def debug(message: String) { if (LogUtil.logEnabled) Log.d(logId, message) }
-  
+
   def error(message: String) { if (LogUtil.logEnabled) Log.e(logId, message) }
-  
-  def info(message: String)  { if (LogUtil.logEnabled) Log.i(logId, message) }
+
+  def info(message: String) { if (LogUtil.logEnabled) Log.i(logId, message) }
 }
 
 

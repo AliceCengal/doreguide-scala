@@ -1,20 +1,19 @@
 package edu.vanderbilt.vm.doreway
 
-case class Tour(
-    places: List[Place], 
-    timeRequired: String, 
-    distance: Double, 
-    description: String,
-    name: String,
-    uniqueId: Int,
-    medias: List[MediaLocation]) {
-  
+case class Tour( places: List[Place]
+               , timeRequired: String
+               , distance: Double
+               , description: String
+               , name: String
+               , uniqueId: Int
+               , medias: List[MediaLocation]
+               ) {  
   override def toString = "{ id: " + uniqueId + ", name: " + name + " }"
   override def hashCode: Int = uniqueId
-  override def equals(other: Any): Boolean = {
+  override def equals(other: Any): Boolean =
     if (!other.isInstanceOf[Tour]) false
     else uniqueId == other.asInstanceOf[Tour].uniqueId
-  }
+
 }
 
 object Tour {
@@ -33,30 +32,30 @@ trait TourBuilder {
 }
 
 private class ITourBuilder extends TourBuilder {
-  var places: List[Place] = List.empty
-  var timeRequired: String = ""
-  var distance: Double = 0
-  var description: String = ""
-  var name: String = ""
-  var uniqueId: Int = Tour.DEFAULT_ID
+  var places: List[Place]         = List.empty
+  var timeRequired: String        = ""
+  var distance: Double            = 0
+  var description: String         = ""
+  var name: String                = ""
+  var uniqueId: Int               = Tour.DEFAULT_ID
   var medias: List[MediaLocation] = List.empty
   
-  def addPlace(place: Place) { places = place :: places }
-  def setTimeReq(t: String) { timeRequired = t }
+  def addPlace(place: Place)    { places = place :: places }
+  def setTimeReq(t: String)     { timeRequired = t }
   def setDistance(dist: Double) { distance = dist }
   def setDescription(d: String) { description = d }
-  def setName(n: String) { name = n }
-  def setId(id: Int) { uniqueId = id }
+  def setName(n: String)        { name = n }
+  def setId(id: Int)            { uniqueId = id }
   def build: Tour = {
     if (uniqueId == Tour.DEFAULT_ID) throw new IllegalStateException
-    else Tour(
-        places, 
-        timeRequired, 
-        distance, 
-        description, 
-        name, 
-        uniqueId, 
-        medias)
+    else Tour( places
+             , timeRequired
+             , distance
+             , description
+             , name
+             , uniqueId
+             , medias
+             )
   }
 }
 
