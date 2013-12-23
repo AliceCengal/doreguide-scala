@@ -6,6 +6,7 @@ import android.widget.TextView
 import android.view.View
 import scala.actors.Actor
 import android.view.View.OnClickListener
+import android.util.Log
 
 /**
  * Converts an activity into an actor
@@ -71,5 +72,30 @@ trait ActivityUtil {
     }
     
 }
+
+object LogUtil {
+  def logEnabled = true
+}
+
+trait LogUtil {
+  def logId: String
+  
+  def debug(message: String) { if (LogUtil.logEnabled) Log.d(logId, message) }
+  
+  def error(message: String) { if (LogUtil.logEnabled) Log.e(logId, message) }
+  
+  def info(message: String)  { if (LogUtil.logEnabled) Log.i(logId, message) }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -7,7 +7,7 @@ case class Node(
     neighbours: Set[Int]) {
   
   val isPlace: Boolean = 
-    if (id < 9999 && id > 0) true else false // Don't kill me Dr Roth!!!
+    if (id < 9999 && id >= 0) true else false // Don't kill me Dr Roth!!!
   
 }
 
