@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreway
+package edu.vanderbilt.vm.doreguide
 
 trait DataObject {
 

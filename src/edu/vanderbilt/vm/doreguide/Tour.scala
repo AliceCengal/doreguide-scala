@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreway
+package edu.vanderbilt.vm.doreguide
 
 case class Tour( places: List[Place]
                , timeRequired: String

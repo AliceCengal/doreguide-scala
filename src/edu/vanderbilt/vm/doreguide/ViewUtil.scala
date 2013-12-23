@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreway
+package edu.vanderbilt.vm.doreguide
 
 import android.app.Activity
 import android.widget.Button

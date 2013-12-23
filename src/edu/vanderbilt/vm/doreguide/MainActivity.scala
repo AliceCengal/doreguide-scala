@@ -1,9 +1,11 @@
-package edu.vanderbilt.vm.doreway
+package edu.vanderbilt.vm.doreguide
 
 import android.app.Activity
 import android.os.Bundle
 import android.graphics.Color
 import java.io.StringReader
+
+import edu.vanderbilt.vm.doreway.R;
 import android.widget.TextView
 import android.app.ActionBar
 import android.view.View

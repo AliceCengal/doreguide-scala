@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreway
+package edu.vanderbilt.vm.doreguide
 
 import scala.actors.Actor
 import java.net.HttpURLConnection
