@@ -49,7 +49,7 @@ class MainActivity extends Activity
   onReact {
     case Count(count) => onUi {
       debug("Count received")
-      request(mCounter) { GetPlaceWithId(count % 4) } }
+      request(mCounter) { GetPlaceWithId(count % 10) } }
     case PlaceList(list) => onUi {
       mView.setText("Place: " + list(0))
     }
