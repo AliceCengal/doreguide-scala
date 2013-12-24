@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="red">Red alert!</string>
 	<string name="app_name">DoreGuide</string>
 	<string name="action_settings">Settings</string>
+	
+	<string name="menu_sort_alphabetic">Sort: alphabetically</string>
+  <string name="menu_sort_distance">Sort: by distance</string>
+  <string name="menu_sort_category">Sort: by category</string>
+  
 </resources>

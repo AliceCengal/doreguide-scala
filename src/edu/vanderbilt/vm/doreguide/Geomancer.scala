@@ -4,13 +4,33 @@ import scala.actors.Actor
 import android.content.Context
 import android.location.Criteria
 import edu.vanderbilt.vm.doreguide.utils.Request
+import android.location.LocationManager
+import android.location.LocationListener
+import android.os.Bundle
+import android.location.Location
 
 class Geomancer extends Actor
     with LogUtil
     with Listenable {
 
-  private var mLocation = null
-
+  private var mLocation: Location = null
+  val FEET_PER_METER = 3.28083989501312;
+  val FEET_PER_MILE = 5280;
+  var locationManager: LocationManager = null
+  val locationListener: LocationListener = new LocationListener() {
+    override def onLocationChanged(loc: Location) {
+      mLocation = loc
+      debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
+      notifyListeners(CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude()))
+    }
+    
+    override def onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+    
+    override def onProviderEnabled(provider: String) {}
+    
+    override def onProviderDisabled(provider: String) {}
+  }
+  
   def logId = "DoreGuide::Geomancer"
 
   def act() {
@@ -18,7 +38,7 @@ class Geomancer extends Actor
       react {
         listenerHandler orElse {
           case Request(requester, message) => message match {
-            case GetLocation => requester ! Location(0, 0)
+            case GetLocation => requester ! CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude())
             case GetStatus   => requester ! Enabled
           }
           case Initialize(ctx) => initialize
@@ -44,9 +64,10 @@ class Geomancer extends Actor
 }
 
 case object GetLocation
-case class Location(lat: Double, lon: Double)
+case class CurrentLoc(lat: Double, lon: Double)
 case object GetStatus
 
 sealed abstract class LocationServiceStatus
 case object Disabled extends LocationServiceStatus
 case object Enabled extends LocationServiceStatus
+

@@ -6,11 +6,11 @@ import android.content.Context
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.container.Place
 
-object DoreGuide extends LogUtil {
-
+object Dore extends LogUtil {
+  
   val placeServer: Actor = {
     val a = new PlaceServer()
-    a.start()
+    a.start() 
     a
   }
   /*
@@ -28,6 +28,12 @@ object DoreGuide extends LogUtil {
   
   val tourServer: Actor = {
     val a = new TourServer()
+    a.start()
+    a
+  }
+  
+  val geomancer: Actor = {
+    val a = new Geomancer()
     a.start()
     a
   }
@@ -57,6 +63,7 @@ object DoreGuide extends LogUtil {
     //nodeServer ! Initialize(ctx)
     agendaManager ! Initialize(ctx)
     tourServer ! Initialize(ctx)
+    geomancer ! Initialize(ctx)
   }
   
   def goodbye(ctx: Context): Unit = {
@@ -64,6 +71,7 @@ object DoreGuide extends LogUtil {
     //nodeServer ! Goodbye(ctx)
     agendaManager ! Goodbye(ctx)
     tourServer ! Goodbye(ctx)
+    geomancer ! Goodbye(ctx)
   }
 }
 

@@ -27,7 +27,7 @@ class MainActivity extends Activity
   override def onCreate(saved: Bundle) {
     super.onCreate(saved)
 
-    DoreGuide.initialize(this)
+    Dore.initialize(this)
     
     mView.setText("Hello")
     setContentView(mView)
@@ -35,8 +35,8 @@ class MainActivity extends Activity
     setupActionBar
 
     click(mView) {
-      DoreGuide.placeServer ! PlaceServer.Incre
-      request(DoreGuide.placeServer) { PlaceServer.Get }
+      Dore.placeServer ! PlaceServer.Incre
+      request(Dore.placeServer) { PlaceServer.Get }
       debug("TextView clicked")
     }
 
@@ -45,7 +45,7 @@ class MainActivity extends Activity
   onReact {
     case PlaceServer.Count(count) => onUi {
       debug("Count received")
-      request(DoreGuide.placeServer) { PlaceServer.GetPlaceWithId(count % 10) }
+      request(Dore.placeServer) { PlaceServer.GetPlaceWithId(count % 10) }
     }
 
     case PlaceList(list) => onUi {
@@ -63,8 +63,8 @@ class MainActivity extends Activity
   private def setupActionBar {
     mAction setNavigationMode           ActionBar.NAVIGATION_MODE_TABS
     mAction setDisplayShowTitleEnabled  true
-    mAction setBackgroundDrawable       DoreGuide.DECENT_GOLD
-    mAction setSplitBackgroundDrawable  DoreGuide.DECENT_GOLD
+    mAction setBackgroundDrawable       Dore.DECENT_GOLD
+    mAction setSplitBackgroundDrawable  Dore.DECENT_GOLD
     mAction setTitle                    "Vanderbilt University"
   }
 

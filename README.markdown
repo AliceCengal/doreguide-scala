@@ -1,4 +1,4 @@
-# DoreWay
+# DoreGuide
 
 This is a rewrite of the GuideAndroid project in Scala, mainly as a 
 practice for me, but getting it production ready is not out of the 
@@ -31,10 +31,4 @@ Deploy to an Android virtual device (AVD):
 
     $ mvn android:deploy
 
-Using an IDE
-------------
-You can use Maven to generate project files for Eclipse or IDEA:
-
-    $ mvn eclipse:eclipse
-    $ mvn idea:idea
 

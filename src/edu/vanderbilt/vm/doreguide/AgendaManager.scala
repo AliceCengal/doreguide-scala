@@ -5,19 +5,18 @@ import scala.actors.Actor
 class AgendaManager extends Actor
     with LogUtil {
 
-  def logId = "DoreGuide::AgendaManager"
+  override def logId = "DoreGuide::AgendaManager"
 
-  def act() {
-    initializeData
+  override def act {
     loop {
       react {
-
-        case a: Any => debug("Message not understood: " + a)
+        case Initialize(ctx) => initializeData
+        case a: Any          => debug("Message not understood: " + a)
       }
     }
   }
 
-  def initializeData {
-
+  private def initializeData {
+    
   }
 }
