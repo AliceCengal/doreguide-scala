@@ -64,7 +64,8 @@ object PlaceServer {
   case class Count(c: Int)
   case class GetPlaceWithId(id: Int)
   case class GetAllPlaces
-  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/GuideAndroid/assets/places.json"
+  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/" + 
+                   "GuideAndroid/assets/places.json"
 }
 
 

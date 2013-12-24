@@ -34,5 +34,6 @@ class TourServer extends Actor with LogUtil {
 }
 
 object TourServer {
-  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/GuideAndroid/assets/tours.json"
+  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/" + 
+                   "GuideAndroid/assets/tours.json"
 }

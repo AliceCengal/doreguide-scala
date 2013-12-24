@@ -2,9 +2,10 @@ package edu.vanderbilt.vm.doreguide.container
 
 import com.google.gson.stream.JsonReader
 
-case class Tour( places: List[Place]
+case class Tour( places: List[Int]
                , timeRequired: String
                , distance: Double
+               , distanceString: String
                , description: String
                , name: String
                , uniqueId: Int
@@ -41,9 +42,15 @@ object Tour {
         case TAG_NAME    => bldr.setName(reader.nextString())
         case TAG_DESC    => bldr.setDescription(reader.nextString())
         case TAG_TIMEREQ => bldr.setTimeReq(reader.nextString())
-        case TAG_PLACES  => {}
-        case TAG_DIST    => {}
-        case TAG_ICON    => {}
+        case TAG_PLACES =>
+          reader.beginArray()
+          while (reader.hasNext()) {
+            bldr.addPlace(reader.nextInt())
+          }
+          reader.endArray()
+
+        case TAG_DIST => bldr.setDistStr(reader.nextString())
+        case TAG_ICON => {}
       }
     }
     reader.endObject()
@@ -53,9 +60,10 @@ object Tour {
 }
 
 trait TourBuilder {
-  def addPlace(place: Place)
+  def addPlace(place: Int)
   def setTimeReq(t: String)
   def setDistance(dist: Double)
+  def setDistStr(str: String)
   def setDescription(d: String)
   def setName(n: String)
   def setId(id: Int)
@@ -63,17 +71,19 @@ trait TourBuilder {
 }
 
 private class ITourBuilder extends TourBuilder {
-  var places: List[Place]         = List.empty
+  var places: List[Int]           = List.empty
   var timeRequired: String        = ""
   var distance: Double            = 0
+  var distStr: String             = ""
   var description: String         = ""
   var name: String                = ""
   var uniqueId: Int               = Tour.DEFAULT_ID
   var medias: List[MediaLocation] = List.empty
   
-  def addPlace(place: Place)    { places = place :: places }
+  def addPlace(place: Int)      { places = place :: places }
   def setTimeReq(t: String)     { timeRequired = t }
   def setDistance(dist: Double) { distance = dist }
+  def setDistStr(str: String)   { distStr = str }
   def setDescription(d: String) { description = d }
   def setName(n: String)        { name = n }
   def setId(id: Int)            { uniqueId = id }
@@ -82,6 +92,7 @@ private class ITourBuilder extends TourBuilder {
     else Tour( places
              , timeRequired
              , distance
+             , distStr
              , description
              , name
              , uniqueId
