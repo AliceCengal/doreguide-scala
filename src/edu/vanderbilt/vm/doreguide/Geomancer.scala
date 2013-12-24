@@ -13,11 +13,19 @@ class Geomancer extends Actor
     with LogUtil
     with Listenable {
 
-  private var mLocation: Location = null
-  val FEET_PER_METER = 3.28083989501312;
-  val FEET_PER_MILE = 5280;
-  var locationManager: LocationManager = null
-  val locationListener: LocationListener = new LocationListener() {
+  private var mLocation: Location = {
+    val l = new Location("default")
+    l.setLatitude(DEFAULT_LATITUDE)
+    l.setLongitude(DEFAULT_LONGITUDE)
+    l
+  }
+  private val DEFAULT_LONGITUDE = -86.803889;
+  private val DEFAULT_LATITUDE = 36.147381;
+  
+  private val FEET_PER_METER = 3.28083989501312;
+  private val FEET_PER_MILE = 5280;
+  private var locationManager: LocationManager = null
+  private val locationListener: LocationListener = new LocationListener() {
     override def onLocationChanged(loc: Location) {
       mLocation = loc
       debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
