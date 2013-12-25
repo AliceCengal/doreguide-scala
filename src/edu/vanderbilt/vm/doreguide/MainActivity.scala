@@ -12,6 +12,7 @@ import android.widget.Toast
 import scala.actors.Actor
 import android.view.Menu
 import edu.vanderbilt.vm.doreguide.utils.MessageUtil
+//import com.google.android.gms.maps.MapFragment
 
 class MainActivity extends Activity
     with ActivityUtil
@@ -19,6 +20,7 @@ class MainActivity extends Activity
     with MessageUtil
     with LogUtil {
 
+  this.start()
   lazy val mAction = getActionBar
   lazy val mView = new TextView(this)
 
@@ -29,24 +31,27 @@ class MainActivity extends Activity
 
     Dore.initialize(this)
     
-    mView.setText("Hello")
-    setContentView(mView)
+    //mView.setText("Hello")
+    //setContentView(mView)
 
+    getFragmentManager().beginTransaction()
+        .add(android.R.id.content, new PlaceListFrag(), "placeList")
+        .commit()
+    
     setupActionBar
 
-    click(mView) {
-      Dore.placeServer ! PlaceServer.Incre
-      request(Dore.placeServer) { PlaceServer.Get }
-      debug("TextView clicked")
-    }
-
+    //click(mView) {
+    //  Dore.placeServer ! PlaceServer.Incre
+    //  request(Dore.placeServer) { PlaceServer.Get }
+    //  debug("TextView clicked")
+    //}
+    
   }
 
   onReact {
-    case PlaceServer.Count(count) => onUi {
+    case PlaceServer.Count(count) =>
       debug("Count received")
       request(Dore.placeServer) { PlaceServer.GetPlaceWithId(count % 10) }
-    }
 
     case PlaceList(list) => onUi {
       mView.setText("Place: " + list(0))

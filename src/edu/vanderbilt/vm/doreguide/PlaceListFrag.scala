@@ -17,7 +17,8 @@ class PlaceListFrag extends Fragment
     with MessageUtil
     with LogUtil {
 
-  private lazy val mView: ListView = new ListView(getActivity)
+  this.start()
+  private lazy val mView: ListView = new ListView(getActivity())
   private var mPlaceList: List[Place] = Nil
   
   override def onCreateView(
@@ -29,13 +30,23 @@ class PlaceListFrag extends Fragment
     super.onActivityCreated(saved)
     setHasOptionsMenu(true)
     request(Dore.placeServer) { PlaceServer.GetAllPlaces }
+    debug("requesting all Places")
   }
   
   override def act: Unit = {
     loop {
       react {
-        
-        case PlaceList(list) => { debug("received place list") }
+        case PlaceList(list) => {
+          getActivity().runOnUiThread(new Runnable() {
+            override def run {
+              mView.setAdapter(
+              new DataAdapter(
+                  list, 
+                  PlaceView.getFactory(getActivity())))
+            }
+          })
+          
+          debug("received place list") }
         
       }
     }

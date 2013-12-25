@@ -50,7 +50,8 @@ object Tour {
           reader.endArray()
 
         case TAG_DIST => bldr.setDistStr(reader.nextString())
-        case TAG_ICON => {}
+        case TAG_ICON => reader.skipValue()
+        case _        => reader.skipValue()
       }
     }
     reader.endObject()

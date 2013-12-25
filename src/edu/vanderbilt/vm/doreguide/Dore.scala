@@ -32,11 +32,11 @@ object Dore extends LogUtil {
     a
   }
   
-  val geomancer: Actor = {
-    val a = new Geomancer()
-    a.start()
-    a
-  }
+  //val geomancer: Actor = {
+  //  val a = new Geomancer()
+  //  a.start()
+  //  a
+  //}
   
   /** This is the gold usually found on sports apparel */
   val DECENT_GOLD = new ColorDrawable(Color.rgb(182, 144, 0))
@@ -63,7 +63,7 @@ object Dore extends LogUtil {
     //nodeServer ! Initialize(ctx)
     agendaManager ! Initialize(ctx)
     tourServer ! Initialize(ctx)
-    geomancer ! Initialize(ctx)
+    //geomancer ! Initialize(ctx)
   }
   
   def goodbye(ctx: Context): Unit = {
@@ -71,7 +71,7 @@ object Dore extends LogUtil {
     //nodeServer ! Goodbye(ctx)
     agendaManager ! Goodbye(ctx)
     tourServer ! Goodbye(ctx)
-    geomancer ! Goodbye(ctx)
+    //geomancer ! Goodbye(ctx)
   }
 }
 

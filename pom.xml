@@ -29,6 +29,20 @@
 		  <artifactId>gson</artifactId>
 		  <version>2.2.4</version>
 		</dependency>
+ <!-- 
+		<dependency>
+		  <groupId>com.google.android.gms</groupId>
+		  <artifactId>google-play-services</artifactId>
+		  <version>13.0.0</version>
+		  <type>apklib</type>
+		</dependency>
+		<dependency>
+		  <groupId>com.google.android.gms</groupId>
+		  <artifactId>google-play-services</artifactId>
+		  <version>13.0.0</version>
+		  <type>jar</type>
+		</dependency>
+-->
 		<!-- <dependency>
       <groupId>net.sf.jgrapht</groupId>
       <artifactId>jgrapht</artifactId>
@@ -102,7 +116,7 @@
 					<resourceDirectory>${project.basedir}/res</resourceDirectory>
 					<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
 					<sdk>
-						<platform>16</platform>
+						<platform>19</platform>
 					</sdk>
 					<dex>
 						<jvmArguments>

@@ -16,7 +16,7 @@ class PlaceServer extends Actor
   private var mPlaceData: List[Place] = List.empty
   private var count: Int = 0
 
-  override def logId = "DoreGuide::Server";
+  override def logId = "DoreGuide::PlaceServer";
 
   override def act() {
     loop {
@@ -37,6 +37,7 @@ class PlaceServer extends Actor
 
             case PlaceServer.GetAllPlaces =>
               requester ! PlaceList(mPlaceData)
+              debug("sending all Places")
           }
 
         case _ => { debug("Message not understood") }

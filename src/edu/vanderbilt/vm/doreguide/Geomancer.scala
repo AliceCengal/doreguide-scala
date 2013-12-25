@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.location.LocationListener
 import android.os.Bundle
 import android.location.Location
+import java.text.DecimalFormat
 
 class Geomancer extends Actor
     with LogUtil
@@ -15,30 +16,26 @@ class Geomancer extends Actor
 
   private var mLocation: Location = {
     val l = new Location("default")
-    l.setLatitude(DEFAULT_LATITUDE)
-    l.setLongitude(DEFAULT_LONGITUDE)
+    l.setLatitude(Geomancer.DEFAULT_LATITUDE)
+    l.setLongitude(Geomancer.DEFAULT_LONGITUDE)
     l
   }
-  private val DEFAULT_LONGITUDE = -86.803889;
-  private val DEFAULT_LATITUDE = 36.147381;
-  
-  private val FEET_PER_METER = 3.28083989501312;
-  private val FEET_PER_MILE = 5280;
   private var locationManager: LocationManager = null
+  private var serviceStatus: LocationServiceStatus = Enabled
   private val locationListener: LocationListener = new LocationListener() {
     override def onLocationChanged(loc: Location) {
       mLocation = loc
       debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
       notifyListeners(CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude()))
     }
-    
+
     override def onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-    
+
     override def onProviderEnabled(provider: String) {}
-    
+
     override def onProviderDisabled(provider: String) {}
   }
-  
+
   def logId = "DoreGuide::Geomancer"
 
   def act() {
@@ -47,28 +44,52 @@ class Geomancer extends Actor
         listenerHandler orElse {
           case Request(requester, message) => message match {
             case GetLocation => requester ! CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude())
-            case GetStatus   => requester ! Enabled
+            case GetStatus   => requester ! serviceStatus
           }
-          case Initialize(ctx) => initialize
+          case Initialize(ctx) => initialize(ctx)
         }
       }
     }
   }
 
-  def initialize {
-
+  private def initialize(ctx: Context) {
+    locationManager = ctx.getSystemService(Context.LOCATION_SERVICE).asInstanceOf[LocationManager]
+    val provider = locationManager.getBestProvider(getCriteriaA(), true)
+    if (provider != null) locationManager.requestLocationUpdates(
+      provider, Geomancer.DEFAULT_TIMEOUT, Geomancer.DEFAULT_RADIUS, locationListener);
+    else serviceStatus = Disabled
   }
 
-  private def getCriteriaA: Criteria = {
+  private def getCriteriaA(): Criteria = {
     val crit = new Criteria();
-    crit.setAccuracy(Criteria.ACCURACY_FINE);
-    crit.setAltitudeRequired(false);
-    crit.setBearingRequired(false);
-    crit.setSpeedRequired(false);
-    crit.setCostAllowed(true);
-    return crit;
+    crit setAccuracy         Criteria.ACCURACY_FINE
+    crit setAltitudeRequired false
+    crit setBearingRequired  false
+    crit setSpeedRequired    false
+    crit setCostAllowed      true
+    crit
   }
 
+}
+
+object Geomancer {
+
+  private val DEFAULT_LONGITUDE = -86.803889;
+  private val DEFAULT_LATITUDE = 36.147381;
+
+  private val FEET_PER_METER = 3.28083989501312;
+  private val FEET_PER_MILE = 5280;
+
+  private val DEFAULT_TIMEOUT = 5000
+  private val DEFAULT_RADIUS = 5
+
+  def getDistanceString(distanceInMeter: Double) {
+    val distanceInFeet = distanceInMeter * FEET_PER_METER
+    if (distanceInFeet < 1000) 
+      distanceInFeet.toInt.toString() + " ft"
+    else 
+      new DecimalFormat("#.##").format(distanceInFeet / FEET_PER_MILE) + " mi"
+  }
 }
 
 case object GetLocation
