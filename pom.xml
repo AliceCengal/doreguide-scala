@@ -29,25 +29,32 @@
 		  <artifactId>gson</artifactId>
 		  <version>2.2.4</version>
 		</dependency>
- <!-- 
+
 		<dependency>
 		  <groupId>com.google.android.gms</groupId>
 		  <artifactId>google-play-services</artifactId>
-		  <version>13.0.0</version>
+		  <version>19</version>
 		  <type>apklib</type>
-		</dependency>
+		</dependency> <!--
 		<dependency>
 		  <groupId>com.google.android.gms</groupId>
 		  <artifactId>google-play-services</artifactId>
-		  <version>13.0.0</version>
+		  <version>19</version>
 		  <type>jar</type>
 		</dependency>
 -->
-		<!-- <dependency>
+		<dependency>
       <groupId>net.sf.jgrapht</groupId>
       <artifactId>jgrapht</artifactId>
       <version>0.8.3</version>
-    </dependency> --> 
+    </dependency> 
+    
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>support-v4</artifactId>
+      <version>r7</version>
+    </dependency>
+    
   </dependencies>
   
 	<profiles>
@@ -109,7 +116,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.8.0</version>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>
@@ -126,7 +133,7 @@
 					</dex>
 					<proguard>
 						<skip>false</skip>
-						<config>proguard.cfg</config>
+						<config>proguard-project.txt</config>
 						<jvmArguments>
 							<jvmArgument>-Xmx1024M</jvmArgument>
 						</jvmArguments>

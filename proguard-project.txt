@@ -73,3 +73,17 @@
   public static final android.os.Parcelable$Creator *;
 }
 
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+#-keep class org.jgraph.**
+#-keepclassmembers class org.jgraph.**
+
+#-keep class com.google.android.gms.common.images.**
+#-keep public class com.google.android.gms.common.images.**
+
+# Fucking witchcraft
+# http://stackoverflow.com/questions/14410520/google-drive-api-doesnt-play-well-with-proguard-npe
+-dontwarn com.google.android.gms.**
+-keep interface com.google.** { *; }
+-keep class * extends com.google.api.client.json.GenericJson {*;}
+-keep class com.google.api.services.drive.** {*;}
