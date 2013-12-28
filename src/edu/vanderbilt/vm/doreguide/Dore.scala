@@ -56,6 +56,8 @@ object Dore extends LogUtil {
   /** white */
   val WHITE = new ColorDrawable(Color.WHITE)
 
+  val BLACK = new ColorDrawable(Color.BLACK)
+  
   override def logId = "DoreGuide::DoreGuide"
   
   def initialize(ctx: Context): Unit = {

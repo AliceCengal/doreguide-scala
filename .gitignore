@@ -52,3 +52,6 @@ out/
 # Since we're building with Maven, this folder is only here for Eclipse to reference,
 # because autocomplete is cool.
 libs
+
+# This is a private key
+mapsapikey.xml

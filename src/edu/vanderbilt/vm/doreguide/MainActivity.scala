@@ -12,7 +12,7 @@ import android.widget.Toast
 import scala.actors.Actor
 import android.view.Menu
 import edu.vanderbilt.vm.doreguide.utils.MessageUtil
-//import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.MapFragment
 
 class MainActivity extends Activity
     with ActivityUtil
@@ -35,7 +35,7 @@ class MainActivity extends Activity
     //setContentView(mView)
 
     getFragmentManager().beginTransaction()
-        .add(android.R.id.content, new PlaceListFrag(), "placeList")
+        .add(android.R.id.content, new MapFragment(), "placeList")
         .commit()
     
     setupActionBar
@@ -66,10 +66,9 @@ class MainActivity extends Activity
   }
   
   private def setupActionBar {
-    mAction setNavigationMode           ActionBar.NAVIGATION_MODE_TABS
     mAction setDisplayShowTitleEnabled  true
     mAction setBackgroundDrawable       Dore.DECENT_GOLD
-    mAction setSplitBackgroundDrawable  Dore.DECENT_GOLD
+    mAction setSplitBackgroundDrawable  Dore.BLACK
     mAction setTitle                    "Vanderbilt University"
   }
 
