@@ -11,10 +11,10 @@
 	<properties>
 		<scala.version>2.9.2</scala.version>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
-			<groupId>com.google.android</groupId>
+		<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>4.1.1.4</version>
 			<scope>provided</scope>
@@ -33,7 +33,7 @@
 		<dependency>
 		  <groupId>com.google.android.gms</groupId>
 		  <artifactId>google-play-services</artifactId>
-		  <version>19</version>
+		  <version>7</version>
 		  <type>apklib</type>
 		</dependency>
 		
@@ -48,13 +48,7 @@
       <artifactId>support-v4</artifactId>
       <version>r7</version>
     </dependency>
-    <!-- 
-    <dependency>
-      <groupId>com.typesafe.akka</groupId>
-      <artifactId>akka-actor_2.10</artifactId>
-      <version>2.3-M1</version>
-    </dependency> -->
-    
+
   </dependencies>
   
 	<profiles>
@@ -116,7 +110,7 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.7.0</version>
 				<configuration>
 					<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 					<assetsDirectory>${project.basedir}/assets</assetsDirectory>

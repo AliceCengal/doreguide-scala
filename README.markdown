@@ -8,6 +8,10 @@ template.
 Prerequisites
 -------------
 * Maven 3
+  - 3.0.5 to be specific. It doesn't work with 3.1.1 for now because of some crazy bug. 
+  Please download the right version from http://maven.apache.org/download.cgi and 
+  follow the instruction at the bottom of the page to set the default Maven version.
+  
 * Android SDK
   - Both SDK Level 8 and the most recent version should be installed.
 

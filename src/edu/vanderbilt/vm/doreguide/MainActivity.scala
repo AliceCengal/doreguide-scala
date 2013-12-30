@@ -16,11 +16,9 @@ import com.google.android.gms.maps.MapFragment
 
 class MainActivity extends Activity
     with ActivityUtil
-    with Reactive
-    with MessageUtil
+    //with MessageUtil
     with LogUtil {
 
-  this.start()
   lazy val mAction = getActionBar
   lazy val mView = new TextView(this)
 
@@ -30,34 +28,12 @@ class MainActivity extends Activity
     super.onCreate(saved)
 
     Dore.initialize(this)
+    setupActionBar
     
-    //mView.setText("Hello")
-    //setContentView(mView)
-
     getFragmentManager().beginTransaction()
         .add(android.R.id.content, new MapFragment(), "placeList")
         .commit()
     
-    setupActionBar
-
-    //click(mView) {
-    //  Dore.placeServer ! PlaceServer.Incre
-    //  request(Dore.placeServer) { PlaceServer.Get }
-    //  debug("TextView clicked")
-    //}
-    
-  }
-
-  onReact {
-    case PlaceServer.Count(count) =>
-      debug("Count received")
-      request(Dore.placeServer) { PlaceServer.GetPlaceWithId(count % 10) }
-
-    case PlaceList(list) => onUi {
-      mView.setText("Place: " + list(0))
-    }
-
-    case _ => debug("Message not understood")
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -67,9 +43,45 @@ class MainActivity extends Activity
   
   private def setupActionBar {
     mAction setDisplayShowTitleEnabled  true
-    mAction setBackgroundDrawable       Dore.DECENT_GOLD
-    mAction setSplitBackgroundDrawable  Dore.BLACK
+    //mAction setBackgroundDrawable       Dore.DECENT_GOLD
+    mAction setSplitBackgroundDrawable  Dore.DECENT_GOLD
     mAction setTitle                    "Vanderbilt University"
   }
 
+  val placesController = new Actor() {
+    override def act() {
+      loop {
+        react {
+          case PlaceServer.Count(count) =>
+            debug("Count received")
+            //request(Dore.placeServer) { PlaceServer.GetPlaceWithId(count % 10) }
+
+          case PlaceList(list) => onUi {
+            mView.setText("Place: " + list(0))
+          }
+
+          case _ => debug("Message not understood")
+        }
+      }
+    }
+  }
+  
+  val agendaController = new Actor() {
+    override def act() {
+      loop {
+        react {
+          case _ => debug("Message not understood")
+        }
+      }
+    }
+  }
+  
 }
+
+
+
+
+
+
+
+

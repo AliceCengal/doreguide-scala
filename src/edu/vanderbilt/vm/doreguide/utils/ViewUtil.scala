@@ -71,6 +71,12 @@ trait ActivityUtil {
       override def onClick(v: View) { block }
     })
   }
+  
+  def onUi(block: => Unit) {
+    self.runOnUiThread(new Runnable() {
+      override def run() { block }
+    })
+  }
 
 }
 
