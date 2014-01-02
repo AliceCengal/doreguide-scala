@@ -1,56 +1,22 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.utils
 
 import android.app.Activity
 import android.widget.Button
 import android.widget.TextView
 import android.view.View
-import scala.actors.Actor
 import android.view.View.OnClickListener
-import android.util.Log
 
-/**
- * Converts an activity into an actor
- * to receive events from another actors or services
- * using onReact function
- *
- * SOURCE: https://github.com/jgoday/sample_android_scala_actor
- */
-trait Reactive extends Actor {
-  self: Activity with ActivityUtil =>
 
-  private var reactiveFunctions: PartialFunction[Any, Unit] = _
+trait ViewUtil {
 
-  def act() {
-    loop {
-      react {
-        reactiveFunctions
-      }
-    }
-  }
-
-  def onReact(pf: PartialFunction[Any, Unit]): Unit = {
-    startReacting
-
-    reactiveFunctions = pf
-  }
-
-  protected def onUi(block: => Unit) {
-    self.runOnUiThread(new Runnable() {
-      override def run() {
-        block
-      }
-    })
-  }
-
-  private def startReacting = {
-    this.start
-  }
+  
+  
 }
 
 /**
- * Utils to interact with an android Activity
- * Find components with a Type T by id
- * Access to the main application throught app
+ * Utils to interact with an android Activity.
+ * Find components with a Type T by id.
+ * Access to the main application through app.
  */
 trait ActivityUtil {
   self: Activity =>
@@ -80,19 +46,6 @@ trait ActivityUtil {
 
 }
 
-object LogUtil {
-  def logEnabled = true
-}
-
-trait LogUtil {
-  def logId: String
-
-  def debug(message: String) { if (LogUtil.logEnabled) Log.d(logId, message) }
-
-  def error(message: String) { if (LogUtil.logEnabled) Log.e(logId, message) }
-
-  def info(message: String) { if (LogUtil.logEnabled) Log.i(logId, message) }
-}
 
 
 

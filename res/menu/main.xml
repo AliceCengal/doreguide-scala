@@ -7,25 +7,25 @@
         android:title="@string/action_settings"/>
 
     <item 
-        android:id="@+id/main_places"
+        android:id="@+id/menu_main_places"
         android:showAsAction="always"
         android:title="Places"
         android:icon="@drawable/show"/>
     
     <item 
-        android:id="@+id/main_agenda"
+        android:id="@+id/menu_main_agenda"
         android:showAsAction="always"
         android:title="Agenda"
         android:icon="@drawable/social_person"/>
     
     <item 
-        android:id="@+id/main_tours"
+        android:id="@+id/menu_main_tours"
         android:showAsAction="always"
         android:title="Tours"
         android:icon="@drawable/device_access_camera"/>
     
     <item 
-        android:id="@+id/main_navigate"
+        android:id="@+id/menu_main_navigate"
         android:showAsAction="always"
         android:title="Navigate"
         android:icon="@drawable/navigate"/>

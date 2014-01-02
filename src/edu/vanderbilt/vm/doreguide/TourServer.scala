@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import java.net.URL
 import edu.vanderbilt.vm.doreguide.container.Tour
+import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
 class TourServer extends Actor with LogUtil {
 

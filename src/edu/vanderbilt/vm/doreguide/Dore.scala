@@ -5,38 +5,19 @@ import android.graphics.drawable.ColorDrawable
 import android.content.Context
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.container.Place
+import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
 object Dore extends LogUtil {
   
-  val placeServer: Actor = {
-    val a = new PlaceServer()
-    a.start() 
-    a
-  }
-  /*
-  val nodeServer: Actor = {
-    val a = new NodeServer()
-    a.start()
-    a
-  }
-  */
-  val agendaManager: Actor = {
-    val a = new AgendaManager()
-    a.start()
-    a
-  }
+  val placeServer: Actor = new PlaceServer().start()
   
-  val tourServer: Actor = {
-    val a = new TourServer()
-    a.start()
-    a
-  }
+  //val nodeServer: Actor = new NodeServer().start()
   
-  //val geomancer: Actor = {
-  //  val a = new Geomancer()
-  //  a.start()
-  //  a
-  //}
+  val agendaManager: Actor = new AgendaManager().start()
+  
+  val tourServer: Actor = new TourServer().start()
+   
+  //val geomancer: Actor = new Geomancer().start()
   
   /** This is the gold usually found on sports apparel */
   val DECENT_GOLD = new ColorDrawable(Color.rgb(182, 144, 0))

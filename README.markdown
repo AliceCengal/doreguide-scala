@@ -35,4 +35,7 @@ Deploy to an Android virtual device (AVD):
 
     $ mvn android:deploy
 
+Programming Notes
+-----------------
+* In object util.LogUtil, set the variable LogEnabled to false for the production build.
 

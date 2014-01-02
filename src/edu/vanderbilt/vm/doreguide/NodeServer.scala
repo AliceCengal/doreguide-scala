@@ -4,6 +4,7 @@ import scala.actors.Actor
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import java.net.URL
+import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
 class NodeServer extends Actor with LogUtil {
 

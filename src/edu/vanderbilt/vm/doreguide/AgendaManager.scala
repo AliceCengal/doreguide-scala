@@ -1,6 +1,7 @@
 package edu.vanderbilt.vm.doreguide
 
 import scala.actors.Actor
+import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
 class AgendaManager extends Actor
     with LogUtil {
