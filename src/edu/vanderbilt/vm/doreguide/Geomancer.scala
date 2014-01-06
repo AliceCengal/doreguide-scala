@@ -15,31 +15,33 @@ class Geomancer extends Actor
     with LogUtil
     with Listenable {
 
+  import Geomancer._
+  
   private var mLocation: Location = {
     val l = new Location("default")
-    l.setLatitude(Geomancer.DEFAULT_LATITUDE)
-    l.setLongitude(Geomancer.DEFAULT_LONGITUDE)
+    l.setLatitude(DEFAULT_LATITUDE)
+    l.setLongitude(DEFAULT_LONGITUDE)
     l
   }
   private var locationManager: LocationManager = null
   private var serviceStatus: LocationServiceStatus = Enabled
   private val locationListener: LocationListener = new LocationListener() {
-    override def onLocationChanged(loc: Location) {
+    override def onLocationChanged(loc: Location): Unit = {
       mLocation = loc
       debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
       notifyListeners(CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude()))
     }
 
-    override def onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+    override def onStatusChanged(provider: String, status: Int, extras: Bundle): Unit = {}
 
-    override def onProviderEnabled(provider: String) {}
+    override def onProviderEnabled(provider: String): Unit = {}
 
-    override def onProviderDisabled(provider: String) {}
+    override def onProviderDisabled(provider: String): Unit = {}
   }
 
   def logId = "DoreGuide::Geomancer"
 
-  def act() {
+  def act(): Unit = {
     loop {
       react {
         listenerHandler orElse {
@@ -53,12 +55,22 @@ class Geomancer extends Actor
     }
   }
 
-  private def initialize(ctx: Context) {
+  private def initialize(ctx: Context): Unit = {
     locationManager = ctx.getSystemService(Context.LOCATION_SERVICE).asInstanceOf[LocationManager]
-    val provider = locationManager.getBestProvider(getCriteriaA(), true)
-    if (provider != null) locationManager.requestLocationUpdates(
-      provider, Geomancer.DEFAULT_TIMEOUT, Geomancer.DEFAULT_RADIUS, locationListener);
-    else serviceStatus = Disabled
+    val provider = locationManager.
+        getBestProvider(
+            getCriteriaA(), 
+            true);
+    
+    if (provider != null) 
+      locationManager.requestLocationUpdates(
+          provider, 
+          DEFAULT_TIMEOUT, 
+          DEFAULT_RADIUS, 
+          locationListener, 
+          null);
+    else 
+      serviceStatus = Disabled
   }
 
   private def getCriteriaA(): Criteria = {
@@ -75,29 +87,31 @@ class Geomancer extends Actor
 
 object Geomancer {
 
-  private val DEFAULT_LONGITUDE = -86.803889;
-  private val DEFAULT_LATITUDE = 36.147381;
+  val DEFAULT_LONGITUDE = -86.803889;
+  val DEFAULT_LATITUDE = 36.147381;
 
-  private val FEET_PER_METER = 3.28083989501312;
-  private val FEET_PER_MILE = 5280;
+  val FEET_PER_METER = 3.28083989501312;
+  val FEET_PER_MILE = 5280;
 
-  private val DEFAULT_TIMEOUT = 5000
-  private val DEFAULT_RADIUS = 5
+  val DEFAULT_TIMEOUT = 5000
+  val DEFAULT_RADIUS = 5
 
-  def getDistanceString(distanceInMeter: Double) {
+  def getDistanceString(distanceInMeter: Double): String = {
     val distanceInFeet = distanceInMeter * FEET_PER_METER
     if (distanceInFeet < 1000) 
       distanceInFeet.toInt.toString() + " ft"
     else 
       new DecimalFormat("#.##").format(distanceInFeet / FEET_PER_MILE) + " mi"
   }
+  
+  case object GetLocation
+  case class CurrentLoc(lat: Double, lon: Double)
+  case object GetStatus
+
+  sealed abstract class LocationServiceStatus
+  case object Disabled extends LocationServiceStatus
+  case object Enabled extends LocationServiceStatus
 }
 
-case object GetLocation
-case class CurrentLoc(lat: Double, lon: Double)
-case object GetStatus
 
-sealed abstract class LocationServiceStatus
-case object Disabled extends LocationServiceStatus
-case object Enabled extends LocationServiceStatus
 

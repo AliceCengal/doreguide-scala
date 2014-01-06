@@ -39,12 +39,9 @@ class PlaceServer extends Actor
           
         case GetPlaceWithId(id) =>
           debug("Sending Place with id " + id)
-          if (id > -1 && id < 9999 && mPlaceData.length != 0){
-            val result = mPlaceData.filter(
-                    (p: Place) => p.uniqueId == id);
-            debug("There are " + result.length + "matches. Expected 1 matches")
-            sender ! PlaceList(result);
-          }
+          val result = mPlaceData.filter(p => p.uniqueId == id);
+          debug("There are " + result.length + "matches. Expected 1 match")
+          sender ! PlaceList(result);
           
         case GetPlacesIdRange(ids) =>
           debug("Sending Places with ids: " + ids.mkString)
@@ -97,8 +94,7 @@ object PlaceServer {
   case class GetPlaceWithId(id: Int)
   case class GetPlacesIdRange(ids: List[Int])
   case object GetAllPlaces
-  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/" + 
-                   "GuideAndroid/assets/places.json"
+  val rawDataUrl = "https://raw.github.com/AliceCengal/vanderbilt-data/master/places.json"
 }
 
 

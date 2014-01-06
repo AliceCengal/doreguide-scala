@@ -27,25 +27,16 @@ class MainActivity extends Activity
   
   lazy val mAction = getActionBar
   var mSelectedTab = -1
-  
   val mMain = new MainController(this).start()
+  
+  Dore.initialize(this)
   
   def logId = "DoreGuide::MainActivity"
 
-  override def onCreate(saved: Bundle) {
+  override def onCreate(saved: Bundle): Unit =  {
     super.onCreate(saved)
-
-    Dore.initialize(this)
-    setupActionBar
-    
     setContentView(R.layout.main_activity)
-    
-    //getFragmentManager().beginTransaction()
-    //    .add(android.R.id.content, new MapFragment(), "placeList")
-    //    .commit();
-    
-    //mMain ! DebugSystem
-    
+    setupActionBar
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -57,25 +48,19 @@ class MainActivity extends Activity
     val id = item.getItemId() 
     id match {
       case R.id.menu_main_places =>
-        if (mSelectedTab == PLACE_TAB) 
-          mMain ! TabReselected(mSelectedTab)
-        else {
-          mMain ! TabUnselected(mSelectedTab)
-          mSelectedTab = PLACE_TAB
-          mMain ! TabSelected(mSelectedTab)
-          
-        }
+        handleTabChange(PLACE_TAB)
+        true
       case R.id.menu_main_agenda =>
-        if (mSelectedTab == 0) mMain ! TabReselected(mSelectedTab)
-        else {
-          mMain ! TabUnselected(mSelectedTab)
-          mSelectedTab = AGENDA_TAB
-          mMain ! TabSelected(id)
-          
-        }
-      case _ => {}
+        handleTabChange(AGENDA_TAB)
+        true
+      case R.id.menu_main_tours =>
+        handleTabChange(TOUR_TAB)
+        true
+      case R.id.menu_main_navigate =>
+        handleTabChange(NAV_TAB)
+        true
+      case _ => { false }
     }
-    true
   }
   
   private def setupActionBar {
@@ -84,7 +69,17 @@ class MainActivity extends Activity
     mAction setSplitBackgroundDrawable  Dore.DECENT_GOLD
     mAction setTitle                    "Vanderbilt University"
   }
-
+  
+  private def handleTabChange(inputId: Int): Unit = {
+    if (mSelectedTab == inputId) {
+      mMain ! TabReselected(mSelectedTab);
+      mSelectedTab = -1 }
+    else {
+      mMain ! TabUnselected(mSelectedTab);
+      mSelectedTab = inputId;
+      mMain ! TabSelected(mSelectedTab); }
+  }
+  
 }
 
 object MainActivity {
@@ -100,33 +95,61 @@ class MainController(val activity: MainActivity)
   
   import PlaceServer._
   import MainController._
+  import MainActivity._
   
-  private val mControllers = Array(
-      new PlaceController(this))
+  private val mControllers: Array[Actor] = {
+    val conts = Array(
+      new PlaceController(this).start(), 
+      new AgendaController().start(),
+      new ToursController().start(),
+      new NavigationController().start());
+    for (c <- conts) c ! Initialize(activity);
+    conts
+  }
   
   def logId = "DoreGuide::MainController"
   
   def act(): Unit = {
     loop { react { 
-      case ShowFragment(frag) => activity.onUi {
-        activity.getFragmentManager().beginTransaction().
-            add(android.R.id.content, frag, "fragment").
+      case ShowFragment(frag) =>
+        activity.getFragmentManager().
+            beginTransaction().
+            replace(R.id.main_base_overlay, frag, "overlay").
             commit();
-        }
         debug("Showing fragment from " + sender.toString())
         
       case TabSelected(tab: Int) => tab match {
-        case 0 => {}
-        case 1 => {}
-        case 2 => {}
-        case 3 => {}
+          case PLACE_TAB  => { mControllers(0) ! ShowTab }
+          case AGENDA_TAB => {}
+          case TOUR_TAB   => {}
+          case NAV_TAB    => {}
         }
-        
-        
-      case DebugSystem => Dore.placeServer ! Get
-      case Count(c) => debug("Received Count")
-      case _ => { debug("Message not understood") }
+
+        case TabReselected(tab: Int) => 
+          hideTab(tab)
+          removeFragment()
+
+        case TabUnselected(tab: Int) => hideTab(tab)
+        case DebugSystem             => Dore.placeServer ! Get
+        case Count(c)                => debug("Received Count")
+        case _                       => debug("Message not understood")
     } }
+  }
+  
+  private def hideTab(tab: Int): Unit = {
+    tab match {
+      case PLACE_TAB  => { mControllers(0) ! HideTab }
+      case AGENDA_TAB => {}
+      case TOUR_TAB   => {}
+      case NAV_TAB    => {}
+    }
+  }
+  
+  private def removeFragment(): Unit = {
+    val fm = activity.getFragmentManager();
+    fm.beginTransaction().
+            remove(fm.findFragmentByTag("overlay")).
+            commit();
   }
 }
 
@@ -152,8 +175,10 @@ class PlaceController(val main: Actor) extends Actor
   
   override def act(): Unit = {
     loop { react {
-      case ShowTab => main ! ShowFragment(frag)
-      case _ => { debug("Message not understood") }
+        case Initialize(ctx) => Dore.placeServer ! PlaceServer.GetAllPlaces
+        case PlaceList(list) => frag.setPlaceList(list)
+        case ShowTab         => main ! ShowFragment(frag)
+        case _               => debug("Message not understood")
     } }
   }
 }

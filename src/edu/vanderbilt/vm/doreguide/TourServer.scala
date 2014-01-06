@@ -9,6 +9,8 @@ import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
 class TourServer extends Actor with LogUtil {
 
+  import TourServer._
+  
   private var mTourData: List[Tour] = List.empty
   
   override def logId = "DoreGuide::TourServer"
@@ -16,6 +18,25 @@ class TourServer extends Actor with LogUtil {
   override def act() {
     loop {
       react {
+        case GetAllTours => 
+          sender ! TourList(mTourData)
+          debug("Sending all Tours")
+          
+        case GetTourWithId(id) =>
+          debug("Sending Tour with id " + id)
+          val result = mTourData.filter(p => p.uniqueId == id)
+          debug("Found " + result.length + ", expected 1 match.")
+          sender ! TourList(result)
+          
+        case GetTourInRange(ids) =>
+          debug("Sending Tours with ids: " + ids.mkString)
+          val result = for (
+              id <- ids;
+              tour <- mTourData
+              if (tour.uniqueId == id))
+            yield tour;
+          debug("Found " + result.length + ", expected " + ids.length + " matches.")
+          sender ! TourList(result)
         case Initialize(ctx) => initialize
       }
     }
@@ -35,6 +56,8 @@ class TourServer extends Actor with LogUtil {
 }
 
 object TourServer {
-  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/" + 
-                   "GuideAndroid/assets/tours.json"
+  case class GetTourWithId(id: Int)
+  case class GetTourInRange(ids: List[Int])
+  case object GetAllTours
+  val rawDataUrl = "https://raw.github.com/AliceCengal/vanderbilt-data/master/tours.json"
 }

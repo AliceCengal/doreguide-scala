@@ -6,6 +6,7 @@ import android.content.Context
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.container.Place
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.container.Tour
 
 object Dore extends LogUtil {
   
@@ -17,7 +18,7 @@ object Dore extends LogUtil {
   
   val tourServer: Actor = new TourServer().start()
    
-  //val geomancer: Actor = new Geomancer().start()
+  val geomancer: Actor = new Geomancer().start()
   
   /** This is the gold usually found on sports apparel */
   val DECENT_GOLD = new ColorDrawable(Color.rgb(182, 144, 0))
@@ -46,7 +47,7 @@ object Dore extends LogUtil {
     //nodeServer ! Initialize(ctx)
     agendaManager ! Initialize(ctx)
     tourServer ! Initialize(ctx)
-    //geomancer ! Initialize(ctx)
+    geomancer ! Initialize(ctx)
   }
   
   def goodbye(ctx: Context): Unit = {
@@ -54,7 +55,7 @@ object Dore extends LogUtil {
     //nodeServer ! Goodbye(ctx)
     agendaManager ! Goodbye(ctx)
     tourServer ! Goodbye(ctx)
-    //geomancer ! Goodbye(ctx)
+    geomancer ! Goodbye(ctx)
   }
 }
 
@@ -69,6 +70,8 @@ case class Initialize(ctx: Context)
  * Message for passing Place data between Actors.
  */
 case class PlaceList(list: List[Place])
+
+case class TourList(list: List[Tour])
 
 /**
  * Message to signify that the application may be closing. Receipients should save any

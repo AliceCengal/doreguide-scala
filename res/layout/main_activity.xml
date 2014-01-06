@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
     <fragment
-		class="com.google.android.gms.maps.MapFragment"
-		android:id="@+id/main_base_map"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+			class="com.google.android.gms.maps.MapFragment"
+			android:id="@+id/main_base_map"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
 
-</LinearLayout>
+    <!-- There should be different versions of this file
+    for different screen sizes, each with different settings
+    for this RelativeLayout. The map should stay fullscreen 
+    in the background, but this overlay could be staggered to
+    the top left or top right.
+    
+     _____________________________________
+    |__University_________________________|
+    |  ______________________     .''''   |
+    | |                      |   /        |
+    | |                      |  /  ____   |
+    | |       (Overlay)      | |  [    ]  |
+    | |                      | |  {    }  |
+    | |                      | |  {    }  |
+    | |______________________| |  [    ]  |
+    |\ o   //  x x x   [  ]       [____]  |
+    | \ o //   X X X   [__]               |
+    |_____________________________________|
+     -->
+    <RelativeLayout
+      android:id="@+id/main_base_overlay"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"></RelativeLayout>
+    
+</RelativeLayout>

@@ -15,6 +15,19 @@ Prerequisites
 * Android SDK
   - Both SDK Level 8 and the most recent version should be installed.
 
+* Create a new file `res/values/mapsapikey.xml` and put in this text:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maps_api_key_v2">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
+</resources>
+
+```
+  Get your own API key by following the instructions on this page https://developers.google.com/maps/documentation/android/start#getting_the_google_maps_android_api_v2
+  and place the key in here. Please double check before your first commit to make sure that your API key is not
+  published to Github.
+  
 Build
 -----
 You can build using Maven:

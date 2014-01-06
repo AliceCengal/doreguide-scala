@@ -30,6 +30,5 @@ class NodeServer extends Actor with LogUtil {
 object NodeServer {
 
   case class GetVertexWithId(id: Int)
-  val rawDataUrl = "https://raw.github.com/VandyMobile/guide-android/master/" +
-                   "GuideAndroid/assets/nodes.json"
+  val rawDataUrl = "https://raw.github.com/AliceCengal/vanderbilt-data/master/nodes.json"
 }
