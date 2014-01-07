@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_gold">#B69000</color>
+    <color name="dark_gold">#A28448</color>
     <color name="light_gold">#ffffdc</color>
+    <color name="decent_gold">#B69000</color>
+    <color name="pure_gold">#F0CE2E</color>
     
     <style name="Separator">
         <item name="android:layout_width">match_parent</item>

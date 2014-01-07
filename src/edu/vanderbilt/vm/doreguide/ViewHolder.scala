@@ -9,5 +9,5 @@ trait ViewHolder {
 }
 
 trait ViewHolderFactory {
-  def createHolder: ViewHolder
+  def createHolder(): ViewHolder
 }

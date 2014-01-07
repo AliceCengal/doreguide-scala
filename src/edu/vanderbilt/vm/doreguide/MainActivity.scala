@@ -17,6 +17,7 @@ import android.app.Fragment
 import android.view.MenuItem
 import edu.vanderbilt.vm.doreguide.utils.ActivityUtil
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.container.Place
 
 class MainActivity extends Activity
     with ActivityUtil
@@ -27,7 +28,13 @@ class MainActivity extends Activity
   
   lazy val mAction = getActionBar
   var mSelectedTab = -1
-  val mMain = new MainController(this).start()
+/*  val mMain: Actor = {
+    val a = new MainController(this);
+    a.start();
+    a
+  } */
+  
+  lazy val mMain: Actor = new MainController(this)
   
   Dore.initialize(this)
   
@@ -37,6 +44,11 @@ class MainActivity extends Activity
     super.onCreate(saved)
     setContentView(R.layout.main_activity)
     setupActionBar
+    
+    getFragmentManager().
+        beginTransaction().
+        add(R.id.main_base_map, new MapFragment(), "base_map").
+        commit(); 
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -45,18 +57,23 @@ class MainActivity extends Activity
   }
   
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
+    debug("Handling menu presses")
     val id = item.getItemId() 
     id match {
       case R.id.menu_main_places =>
+        debug("Place tab selected.")
         handleTabChange(PLACE_TAB)
         true
       case R.id.menu_main_agenda =>
+        debug("Agenda tab selected.")
         handleTabChange(AGENDA_TAB)
         true
       case R.id.menu_main_tours =>
+        debug("Tour tab selected.")
         handleTabChange(TOUR_TAB)
         true
       case R.id.menu_main_navigate =>
+        debug("Nav tab selected.")
         handleTabChange(NAV_TAB)
         true
       case _ => { false }
@@ -72,9 +89,11 @@ class MainActivity extends Activity
   
   private def handleTabChange(inputId: Int): Unit = {
     if (mSelectedTab == inputId) {
+      debug("Hide the reselected tab.")
       mMain ! TabReselected(mSelectedTab);
       mSelectedTab = -1 }
     else {
+      debug("Showing tab number " + inputId)
       mMain ! TabUnselected(mSelectedTab);
       mSelectedTab = inputId;
       mMain ! TabSelected(mSelectedTab); }
@@ -96,36 +115,44 @@ class MainController(val activity: MainActivity)
   import PlaceServer._
   import MainController._
   import MainActivity._
-  
+  /*
   private val mControllers: Array[Actor] = {
     val conts = Array(
-      new PlaceController(this).start(), 
-      new AgendaController().start(),
-      new ToursController().start(),
-      new NavigationController().start());
-    for (c <- conts) c ! Initialize(activity);
+      new PlaceController(null).start() 
+      //new AgendaController().start(),
+      //new ToursController().start(),
+      //new NavigationController().start()
+      );
+    //for (c <- conts) c ! Initialize(activity);
+    conts(0) ! Initialize(activity);
     conts
   }
+  */
+  val placeCont = {
+    val a = new PlaceController();
+    a.start();
+    a ! Initialize(activity)
+    a
+  }
   
-  def logId = "DoreGuide::MainController"
-  
-  def act(): Unit = {
-    loop { react { 
-      case ShowFragment(frag) =>
-        activity.getFragmentManager().
+  override def logId = "DoreGuide::MainController"
+
+  override def act(): Unit = {
+    loop {
+      react {
+        case ShowFragment(frag) =>
+          activity.getFragmentManager().
             beginTransaction().
             replace(R.id.main_base_overlay, frag, "overlay").
             commit();
-        debug("Showing fragment from " + sender.toString())
-        
-      case TabSelected(tab: Int) => tab match {
-          case PLACE_TAB  => { mControllers(0) ! ShowTab }
-          case AGENDA_TAB => {}
-          case TOUR_TAB   => {}
-          case NAV_TAB    => {}
-        }
+          debug("Showing fragment from " + sender.toString())
 
-        case TabReselected(tab: Int) => 
+        case TabSelected(tab: Int) =>
+          //mControllers(tab) ! ShowTab;
+          placeCont ! ShowTab;
+          debug("TabSelected: " + tab);
+
+        case TabReselected(tab: Int) =>
           hideTab(tab)
           removeFragment()
 
@@ -133,15 +160,18 @@ class MainController(val activity: MainActivity)
         case DebugSystem             => Dore.placeServer ! Get
         case Count(c)                => debug("Received Count")
         case _                       => debug("Message not understood")
-    } }
+      }
+    }
   }
   
   private def hideTab(tab: Int): Unit = {
+    debug("HideTab message received.")
     tab match {
-      case PLACE_TAB  => { mControllers(0) ! HideTab }
+      case PLACE_TAB  => { placeCont ! HideTab }
       case AGENDA_TAB => {}
       case TOUR_TAB   => {}
       case NAV_TAB    => {}
+      case _ => debug("Tab id: " + tab)
     }
   }
   
@@ -164,22 +194,40 @@ object MainController {
   
 }
 
-class PlaceController(val main: Actor) extends Actor 
+class PlaceController extends Actor 
     with LogUtil {
   
   import MainController._
+  import PlaceServer._
   
   private val frag = new PlaceListFrag(this)
+  
+  private var mData: List[Place] = List.empty
+  
+  private var needToShowFrag = false
   
   override def logId = "DoreGuide::PlaceController"
   
   override def act(): Unit = {
-    loop { react {
-        case Initialize(ctx) => Dore.placeServer ! PlaceServer.GetAllPlaces
-        case PlaceList(list) => frag.setPlaceList(list)
-        case ShowTab         => main ! ShowFragment(frag)
-        case _               => debug("Message not understood")
-    } }
+    loop {
+      react {
+        case Initialize(ctx) => 
+          debug("Initialization.")
+          Dore.placeServer ! GetAllPlaces
+          
+        case PlaceList(list) =>
+          mData = list
+          debug("Received data")
+          
+        case ShowTab =>
+          frag.setPlaceList(mData)
+          sender ! ShowFragment(frag)
+          debug("Sending Fragment for display")
+          
+        case HideTab => debug("HideTab message received.")
+        case _ => debug("Message not understood")
+      }
+    }
   }
 }
 

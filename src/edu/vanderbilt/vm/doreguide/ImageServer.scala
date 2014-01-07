@@ -6,6 +6,9 @@ import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
+/**
+ * Downloads and caches images on request.
+ */
 class ImageServer extends Actor with LogUtil {
 
   import ImageServer._

@@ -35,7 +35,7 @@ class PlaceServer extends Actor
         
         case GetAllPlaces =>
           sender ! PlaceList(mPlaceData)
-          debug("Sending all Places")
+          debug("Sending all " + mPlaceData.length + "Places to " + sender.toString())
           
         case GetPlaceWithId(id) =>
           debug("Sending Place with id " + id)
@@ -52,21 +52,6 @@ class PlaceServer extends Actor
             yield place;
           debug("There are " + result.length + "matches. Expected" + ids.length + "matches")
           sender ! PlaceList(result)
-          
-        case Request(requester, message) =>
-          message match {
-            case Get =>
-              requester ! Count(count)
-              debug("Get received in a Request")
-            case GetPlaceWithId(id) =>
-              if (id >= 0 && id < 9999 && mPlaceData.length != 0)
-                requester ! PlaceList(List(mPlaceData(id)))
-              debug("Received a request")
-            case GetAllPlaces =>
-              requester ! PlaceList(mPlaceData)
-              debug("sending all Places")
-              debug("received a request")
-          }
 
         case _ => { debug("Message not understood") }
       }
@@ -78,6 +63,7 @@ class PlaceServer extends Actor
       new InputStreamReader(
         (new URL(rawDataUrl)).openConnection().getInputStream))
 
+    mPlaceData = List.empty
     reader.beginArray()
     while (reader.hasNext()) {
       mPlaceData = Place.buildFromJson(reader) :: mPlaceData

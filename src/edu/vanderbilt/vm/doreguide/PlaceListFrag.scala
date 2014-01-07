@@ -12,6 +12,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import edu.vanderbilt.vm.doreguide.container.Place
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import android.widget.TextView
+import android.app.DialogFragment
 
 class PlaceListFrag(val controller: Actor) extends Fragment 
     with LogUtil {
@@ -22,22 +24,23 @@ class PlaceListFrag(val controller: Actor) extends Fragment
   override def onCreateView(
       inflater: LayoutInflater, 
       container: ViewGroup, 
-      saved: Bundle): View = mView;
+      saved: Bundle): View = {
+    
+    mView;
+  }
   
   override def onActivityCreated(saved: Bundle) {
     super.onActivityCreated(saved)
-    //request(Dore.placeServer) { PlaceServer.GetAllPlaces }
-    debug("requesting all Places")
+    mView.setAdapter(
+       new DataAdapter(
+            mPlaceList, 
+            PlaceView.getFactory(getActivity())));
   }
+  
   override def logId = "DoreGuide::PlaceListFrag";
   
   def setPlaceList(pl: List[Place]): Unit = {
     mPlaceList = pl;
-    mView.setAdapter(
-        new DataAdapter(
-            mPlaceList, 
-            PlaceView.getFactory(getActivity())));
-    mView.invalidate()
   }
   
 }

@@ -21,7 +21,7 @@ class DataAdapter(
   override def getView(position: Int, convView: View, parent: ViewGroup) = {
     
     val holder =	if (convView == null) {
-				      val h = mFactory.createHolder
+				      val h = mFactory.createHolder()
 				      h.getView.setTag(h)
 				      h
 				    }

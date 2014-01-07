@@ -20,6 +20,8 @@ object Dore extends LogUtil {
    
   val geomancer: Actor = new Geomancer().start()
   
+  val imageServer: Actor = new ImageServer().start()
+  
   /** This is the gold usually found on sports apparel */
   val DECENT_GOLD = new ColorDrawable(Color.rgb(182, 144, 0))
 
@@ -48,6 +50,7 @@ object Dore extends LogUtil {
     agendaManager ! Initialize(ctx)
     tourServer ! Initialize(ctx)
     geomancer ! Initialize(ctx)
+    imageServer ! Initialize(ctx)
   }
   
   def goodbye(ctx: Context): Unit = {
@@ -56,6 +59,7 @@ object Dore extends LogUtil {
     agendaManager ! Goodbye(ctx)
     tourServer ! Goodbye(ctx)
     geomancer ! Goodbye(ctx)
+    imageServer ! Goodbye(ctx)
   }
 }
 

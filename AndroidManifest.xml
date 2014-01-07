@@ -39,10 +39,10 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/maps_api_key_v2" />
-<!--
+
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> -->
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
