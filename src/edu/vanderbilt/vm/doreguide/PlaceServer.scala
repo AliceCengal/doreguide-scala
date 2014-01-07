@@ -35,7 +35,7 @@ class PlaceServer extends Actor
         
         case GetAllPlaces =>
           sender ! PlaceList(mPlaceData)
-          debug("Sending all " + mPlaceData.length + "Places to " + sender.toString())
+          debug("Sending all " + mPlaceData.length + " Places to " + sender.toString())
           
         case GetPlaceWithId(id) =>
           debug("Sending Place with id " + id)
@@ -56,6 +56,10 @@ class PlaceServer extends Actor
         case _ => { debug("Message not understood") }
       }
     }
+  }
+  
+  override def exceptionHandler = {
+    case e => error(e.getMessage())
   }
 
   private def initializeData {

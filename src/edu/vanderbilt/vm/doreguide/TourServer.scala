@@ -42,12 +42,17 @@ class TourServer extends Actor with LogUtil {
     }
   }
 
+  override def exceptionHandler = {
+    case e => error(e.getMessage())
+  }
+  
   private def initialize {
 
     val reader = new JsonReader(
         new InputStreamReader(
             new URL(TourServer.rawDataUrl).openConnection.getInputStream))
     
+    mTourData = List.empty
     reader.beginArray()
     while(reader.hasNext()) { mTourData = Tour.buildFromJson(reader) :: mTourData }
     reader.endArray()

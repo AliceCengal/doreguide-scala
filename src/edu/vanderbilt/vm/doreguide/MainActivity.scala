@@ -34,9 +34,9 @@ class MainActivity extends Activity
     a
   } */
   
-  lazy val mMain: Actor = new MainController(this)
+  var mMain: Actor = null;
   
-  Dore.initialize(this)
+  
   
   def logId = "DoreGuide::MainActivity"
 
@@ -44,6 +44,12 @@ class MainActivity extends Activity
     super.onCreate(saved)
     setContentView(R.layout.main_activity)
     setupActionBar
+    
+    Dore.initialize(this)
+    
+    mMain = new MainController(this)
+    mMain.start()
+    mMain ! Initialize(this)
     
     getFragmentManager().
         beginTransaction().
@@ -128,18 +134,31 @@ class MainController(val activity: MainActivity)
     conts
   }
   */
-  val placeCont = {
-    val a = new PlaceController();
-    a.start();
-    a ! Initialize(activity)
-    a
-  }
+  
+  private var mControllers: List[Actor] = List.empty
+  
+  //var placeCont: Actor = null
   
   override def logId = "DoreGuide::MainController"
 
   override def act(): Unit = {
     loop {
       react {
+        case Initialize(ctx) =>
+          mControllers = List(
+              new PlaceController(), 
+              new AgendaController(), 
+              new ToursController(),
+              new NavigationController());
+          
+          for (a <- mControllers) {
+            a.start()
+            a ! Initialize(ctx)
+          }
+          //placeCont = new PlaceController()
+          //placeCont.start()
+          //placeCont ! Initialize(activity)
+          
         case ShowFragment(frag) =>
           activity.getFragmentManager().
             beginTransaction().
@@ -148,8 +167,8 @@ class MainController(val activity: MainActivity)
           debug("Showing fragment from " + sender.toString())
 
         case TabSelected(tab: Int) =>
-          //mControllers(tab) ! ShowTab;
-          placeCont ! ShowTab;
+          mControllers(0) ! ShowTab;
+          //placeCont ! ShowTab;
           debug("TabSelected: " + tab);
 
         case TabReselected(tab: Int) =>
@@ -164,10 +183,14 @@ class MainController(val activity: MainActivity)
     }
   }
   
+  override def exceptionHandler = {
+    case e => error(e.getMessage())
+  }
+  
   private def hideTab(tab: Int): Unit = {
     debug("HideTab message received.")
     tab match {
-      case PLACE_TAB  => { placeCont ! HideTab }
+      case PLACE_TAB  => { mControllers(0) ! HideTab }
       case AGENDA_TAB => {}
       case TOUR_TAB   => {}
       case NAV_TAB    => {}
@@ -194,70 +217,7 @@ object MainController {
   
 }
 
-class PlaceController extends Actor 
-    with LogUtil {
-  
-  import MainController._
-  import PlaceServer._
-  
-  private val frag = new PlaceListFrag(this)
-  
-  private var mData: List[Place] = List.empty
-  
-  private var needToShowFrag = false
-  
-  override def logId = "DoreGuide::PlaceController"
-  
-  override def act(): Unit = {
-    loop {
-      react {
-        case Initialize(ctx) => 
-          debug("Initialization.")
-          Dore.placeServer ! GetAllPlaces
-          
-        case PlaceList(list) =>
-          mData = list
-          debug("Received data")
-          
-        case ShowTab =>
-          frag.setPlaceList(mData)
-          sender ! ShowFragment(frag)
-          debug("Sending Fragment for display")
-          
-        case HideTab => debug("HideTab message received.")
-        case _ => debug("Message not understood")
-      }
-    }
-  }
-}
-
-object PlaceController {
-  case object GetMarkedPlaces
-}
 
 
-class AgendaController extends Actor {
-  override def act(): Unit = {
-    loop { react {
-      case _ => {}
-    } }
-  }
-}
-
-class ToursController extends Actor {
-  override def act(): Unit = {
-    loop { react {
-      case _ => {}
-    } }
-  }
-}
-
-class NavigationController extends Actor {
-  override def act(): Unit= {
-    loop { react {
-      case _ => {}
-    } }
-  }
-}
 
 

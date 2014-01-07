@@ -5,10 +5,29 @@ import android.widget.Button
 import android.widget.TextView
 import android.view.View
 import android.view.View.OnClickListener
-
+import android.view.ViewGroup
 
 trait ViewUtil {
 
+  def inGroup(view: View)(block: PartialFunction[(View, Int), Unit]) {
+    block((view, view.getId()))
+
+    if (view.isInstanceOf[ViewGroup]) {
+      val vg = view.asInstanceOf[ViewGroup]
+      for (
+        index <- 0 to (vg.getChildCount() - 1);
+        vv = vg.getChildAt(index)
+      ) {
+        inGroup(vv) { block }
+      }
+    }
+  }
+  
+  def click(v: View)(block: => Unit) {
+    v.setOnClickListener(new OnClickListener() {
+      override def onClick(v: View) { block }
+    })
+  }
   
   
 }
@@ -37,7 +56,7 @@ trait ActivityUtil {
       override def onClick(v: View) { block }
     })
   }
-  
+
   def onUi(block: => Unit) {
     self.runOnUiThread(new Runnable() {
       override def run() { block }

@@ -13,7 +13,7 @@ import android.widget.ListView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.views.TourView
 
-class TourTabFrag extends Fragment with ViewUtil with LogUtil {
+class TourTabFrag extends Fragment with ViewUtil {
 
   private var mTourList: List[Tour] = List.empty
   

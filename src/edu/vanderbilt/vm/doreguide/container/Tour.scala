@@ -10,7 +10,7 @@ case class Tour( places: List[Int]
                , name: String
                , uniqueId: Int
                , medias: List[MediaLocation]
-               ) {  
+               ) extends DataObject {  
   override def toString = "{ id: " + uniqueId + ", name: " + name + " }"
   override def hashCode: Int = uniqueId
   override def equals(other: Any): Boolean =
