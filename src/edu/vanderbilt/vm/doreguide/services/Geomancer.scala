@@ -1,9 +1,8 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import scala.actors.Actor
 import android.content.Context
 import android.location.Criteria
-import edu.vanderbilt.vm.doreguide.utils.Request
 import android.location.LocationManager
 import android.location.LocationListener
 import android.os.Bundle
@@ -12,7 +11,7 @@ import java.text.DecimalFormat
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.utils.Listenable
 
-class Geomancer extends Actor
+class Geomancer extends Actor 
     with LogUtil
     with Listenable {
 

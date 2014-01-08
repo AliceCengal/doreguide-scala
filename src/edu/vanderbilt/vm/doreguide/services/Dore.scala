@@ -1,11 +1,10 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.content.Context
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.container.Place
-import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.container.Tour
 
 object Dore extends LogUtil {

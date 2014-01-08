@@ -18,6 +18,10 @@ import edu.vanderbilt.vm.doreguide.views.PlaceView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.utils.ViewUtil
 import android.widget.Toast
+import edu.vanderbilt.vm.doreguide.services.PlaceList
+import edu.vanderbilt.vm.doreguide.services.Initialize
+import edu.vanderbilt.vm.doreguide.services.Dore
+import edu.vanderbilt.vm.doreguide.services.PlaceServer
 
 class PlaceListFrag(val controller: Actor) extends Fragment
     with ViewUtil

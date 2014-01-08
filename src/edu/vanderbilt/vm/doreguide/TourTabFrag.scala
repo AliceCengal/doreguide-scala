@@ -12,6 +12,10 @@ import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import android.widget.ListView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.views.TourView
+import edu.vanderbilt.vm.doreguide.services.TourList
+import edu.vanderbilt.vm.doreguide.services.Initialize
+import edu.vanderbilt.vm.doreguide.services.Dore
+import edu.vanderbilt.vm.doreguide.services.TourServer
 
 class TourTabFrag extends Fragment with ViewUtil {
 

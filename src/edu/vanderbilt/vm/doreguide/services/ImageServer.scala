@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import scala.actors.Actor
 import android.graphics.Bitmap

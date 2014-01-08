@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import scala.actors.Actor
 import com.google.gson.stream.JsonReader

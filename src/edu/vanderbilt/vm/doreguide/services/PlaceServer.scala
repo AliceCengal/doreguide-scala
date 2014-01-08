@@ -1,14 +1,10 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import scala.actors.Actor
-import java.net.HttpURLConnection
 import java.net.URL
-import scala.io.Source
-import scala.io.Codec
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import edu.vanderbilt.vm.doreguide.container.Place
-import edu.vanderbilt.vm.doreguide.utils.Request
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 
 class PlaceServer extends Actor

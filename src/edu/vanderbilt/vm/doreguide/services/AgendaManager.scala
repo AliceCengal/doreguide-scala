@@ -1,8 +1,9 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.utils.Listenable
+
 
 class AgendaManager extends Actor
     with Listenable

@@ -1,10 +1,12 @@
-package edu.vanderbilt.vm.doreguide
+package edu.vanderbilt.vm.doreguide.services
 
 import scala.actors.Actor
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import java.net.URL
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.Initialize
+import edu.vanderbilt.vm.doreguide.services.Initialize
 
 class NodeServer extends Actor with LogUtil {
 

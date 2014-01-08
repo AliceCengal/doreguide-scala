@@ -12,6 +12,9 @@ import android.os.Bundle
 import android.widget.ListView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.views.PlaceView
+import edu.vanderbilt.vm.doreguide.services.Initialize
+import edu.vanderbilt.vm.doreguide.services.Geomancer
+import edu.vanderbilt.vm.doreguide.services.PlaceServer
 
 class AgendaTabFrag(val cont: Actor) extends Fragment with ViewUtil with LogUtil {
 
