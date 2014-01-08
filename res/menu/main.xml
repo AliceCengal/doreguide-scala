@@ -10,7 +10,7 @@
         android:id="@+id/menu_main_places"
         android:showAsAction="always"
         android:title="Places"
-        android:icon="@drawable/show"/>
+        android:icon="@drawable/device_access_storage"/>
     
     <item 
         android:id="@+id/menu_main_agenda"
@@ -28,6 +28,6 @@
         android:id="@+id/menu_main_navigate"
         android:showAsAction="always"
         android:title="Navigate"
-        android:icon="@drawable/navigate"/>
+        android:icon="@drawable/location_directions"/>
     
 </menu>

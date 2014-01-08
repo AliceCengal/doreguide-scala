@@ -25,13 +25,6 @@ class PlaceServer extends Actor
     loop {
       react {
         case Initialize(ctx) => initializeData
-        case Incre =>
-          count = count + 1
-          debug("Incre received")
-
-        case Get =>
-          debug("Get received bare")
-          sender ! Count(count)
         
         case GetAllPlaces =>
           sender ! PlaceList(mPlaceData)
@@ -78,9 +71,6 @@ class PlaceServer extends Actor
 }
 
 object PlaceServer {
-  case class Incre
-  case class Get
-  case class Count(c: Int)
   case class GetPlaceWithId(id: Int)
   case class GetPlacesIdRange(ids: List[Int])
   case object GetAllPlaces

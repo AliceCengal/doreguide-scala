@@ -83,10 +83,7 @@ class PlaceController extends Actor
   import PlaceServer._
 
   private val frag = new PlaceListFrag(this)
-
   private var mData: List[Place] = List.empty
-
-  private var needToShowFrag = false
 
   override def logId = "DoreGuide::PlaceController"
 

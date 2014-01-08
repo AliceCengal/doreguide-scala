@@ -28,17 +28,9 @@ class MainActivity extends Activity
   
   lazy val mAction = getActionBar
   var mSelectedTab = -1
-/*  val mMain: Actor = {
-    val a = new MainController(this);
-    a.start();
-    a
-  } */
-  
   var mMain: Actor = null;
   
-  
-  
-  def logId = "DoreGuide::MainActivity"
+  override def logId = "DoreGuide::MainActivity"
 
   override def onCreate(saved: Bundle): Unit =  {
     super.onCreate(saved)
@@ -121,23 +113,8 @@ class MainController(val activity: MainActivity)
   import PlaceServer._
   import MainController._
   import MainActivity._
-  /*
-  private val mControllers: Array[Actor] = {
-    val conts = Array(
-      new PlaceController(null).start() 
-      //new AgendaController().start(),
-      //new ToursController().start(),
-      //new NavigationController().start()
-      );
-    //for (c <- conts) c ! Initialize(activity);
-    conts(0) ! Initialize(activity);
-    conts
-  }
-  */
   
   private var mControllers: List[Actor] = List.empty
-  
-  //var placeCont: Actor = null
   
   override def logId = "DoreGuide::MainController"
 
@@ -155,9 +132,6 @@ class MainController(val activity: MainActivity)
             a.start()
             a ! Initialize(ctx)
           }
-          //placeCont = new PlaceController()
-          //placeCont.start()
-          //placeCont ! Initialize(activity)
           
         case ShowFragment(frag) =>
           activity.getFragmentManager().
@@ -167,17 +141,16 @@ class MainController(val activity: MainActivity)
           debug("Showing fragment from " + sender.toString())
 
         case TabSelected(tab: Int) =>
-          mControllers(0) ! ShowTab;
-          //placeCont ! ShowTab;
+          mControllers(tab) ! ShowTab;
           debug("TabSelected: " + tab);
 
         case TabReselected(tab: Int) =>
           hideTab(tab)
           removeFragment()
 
-        case TabUnselected(tab: Int) => hideTab(tab)
-        case DebugSystem             => Dore.placeServer ! Get
-        case Count(c)                => debug("Received Count")
+        case TabUnselected(tab: Int) => 
+          hideTab(tab)
+          removeFragment()
         case _                       => debug("Message not understood")
       }
     }
@@ -188,14 +161,8 @@ class MainController(val activity: MainActivity)
   }
   
   private def hideTab(tab: Int): Unit = {
-    debug("HideTab message received.")
-    tab match {
-      case PLACE_TAB  => { mControllers(0) ! HideTab }
-      case AGENDA_TAB => {}
-      case TOUR_TAB   => {}
-      case NAV_TAB    => {}
-      case _ => debug("Tab id: " + tab)
-    }
+    debug("HideTab message received for tab " + tab)
+    mControllers(tab) ! HideTab
   }
   
   private def removeFragment(): Unit = {
@@ -212,9 +179,7 @@ object MainController {
   case class TabSelected(tab: Int)
   case class TabUnselected(tab: Int)
   case class TabReselected(tab: Int)
-  case object DebugSystem
-  case class ShowFragment(frag: Fragment)
-  
+  case class ShowFragment(frag: Fragment) 
 }
 
 
