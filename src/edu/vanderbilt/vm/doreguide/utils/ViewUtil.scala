@@ -9,7 +9,7 @@ import android.view.ViewGroup
 
 trait ViewUtil {
 
-  def inGroup(view: View)(block: PartialFunction[(View, Int), Unit]) {
+  def inGroup(view: View)(block: PartialFunction[(View, Int), Unit]): Unit = {
     block((view, view.getId()))
 
     if (view.isInstanceOf[ViewGroup]) {
@@ -23,7 +23,7 @@ trait ViewUtil {
     }
   }
   
-  def click(v: View)(block: => Unit) {
+  def click(v: View)(block: => Unit): Unit = {
     v.setOnClickListener(new OnClickListener() {
       override def onClick(v: View) { block }
     })
@@ -33,6 +33,10 @@ trait ViewUtil {
     new Runnable() {
       override def run() = block
     }
+  }
+  
+  def onUi(act: Activity)(block: => Unit): Unit = {
+    act.runOnUiThread(run(block))
   }
   
 }

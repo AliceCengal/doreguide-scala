@@ -42,10 +42,18 @@ class PlaceServer extends Actor
               place <- mPlaceData
               if (place.uniqueId == id))
             yield place;
-          debug("There are " + result.length + "matches. Expected" + ids.length + "matches")
+          debug("There are " + result.length + " matches. Expected " + ids.length + " matches")
           sender ! PlaceList(result)
 
-        case _ => { debug("Message not understood") }
+        case FindClosestPlace(lat, lng) =>
+          val sortedByDistance = mPlaceData.sortWith(
+              (a,b) =>
+                  calcDistance(a.latitude, a.longitude, lat, lng) <
+                  calcDistance(b.latitude, b.longitude, lat, lng))
+          
+          sender ! ClosestPlace(sortedByDistance(0))
+          
+        case a: Any => { debug("Message not understood: " + a + " from: " + sender) }
       }
     }
   }
@@ -67,12 +75,26 @@ class PlaceServer extends Actor
     reader.endArray()
   }
 
+  private def calcDistance(
+      lat1: Double, 
+      lng1: Double, 
+      lat2: Double, 
+      lng2: Double): Double = {
+    Math.sqrt(
+        Math.pow(lat2 - lat1, 2) +
+        Math.pow(lng2 - lng1, 2))
+  }
+  
 }
 
 object PlaceServer {
   case class GetPlaceWithId(id: Int)
   case class GetPlacesIdRange(ids: List[Int])
   case object GetAllPlaces
+  
+  case class FindClosestPlace(lat: Double, lng: Double)
+  case class ClosestPlace(plc: Place)
+  
   val rawDataUrl = "https://raw.github.com/AliceCengal/vanderbilt-data/master/places.json"
 }
 

@@ -22,7 +22,7 @@ class ImageServer extends Actor with LogUtil {
   override def act(): Unit = {
     loop { react {
       case Initialize(ctx) => initialize(ctx)
-      case DispatchImage(url) => { sender ! Image(defaultImage) }
+      case DispatchImage(url) => { sender ! Image(url, defaultImage) }
       case _ => { debug("Message Not Understood") }
     } }
   }
@@ -39,7 +39,7 @@ class ImageServer extends Actor with LogUtil {
 
 object ImageServer {
   case class DispatchImage(url: String)
-  case class Image(img: Bitmap)
+  case class Image(url: String, img: Bitmap)
   
   
 }

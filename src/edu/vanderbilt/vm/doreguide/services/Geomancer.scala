@@ -11,6 +11,7 @@ import java.text.DecimalFormat
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.utils.Listenable
 import edu.vanderbilt.vm.doreguide.Initialize
+import edu.vanderbilt.vm.doreguide.Goodbye
 
 class Geomancer extends Actor 
     with LogUtil
@@ -21,20 +22,12 @@ class Geomancer extends Actor
   private var mLocation: Location = DEFAULT_LOC
   private var locationManager: LocationManager = null
   private var serviceStatus: LocationServiceStatus = Enabled
-  private val locationListener: LocationListener = new LocationListener() {
-    override def onLocationChanged(loc: Location): Unit = {
-      mLocation = loc
-      debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
-      notifyListeners(CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude()))
-    }
+  private val locationListener: LocationListener = getLocListener()
+  private var provider: String = ""
 
-    override def onStatusChanged(provider: String, status: Int, extras: Bundle): Unit = {}
-
-    override def onProviderEnabled(provider: String): Unit = {}
-
-    override def onProviderDisabled(provider: String): Unit = {}
-  }
-
+  private var mTimer: Actor = null
+  private var isRunning: Boolean = false
+  
   override def logId = "DoreGuide::Geomancer"
 
   override def act(): Unit = {
@@ -43,7 +36,21 @@ class Geomancer extends Actor
         listenerHandler orElse {
           case GetLocation     => sender ! CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude())
           case GetStatus       => sender ! serviceStatus
+          case UpdateLocation =>
+            if (isRunning) {
+              mLocation = locationManager.getLastKnownLocation(provider)
+              debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
+              notifyListeners(
+                CurrentLoc(
+                  mLocation.getLatitude(),
+                  mLocation.getLongitude()))
+
+            }
+            
           case Initialize(ctx) => initialize(ctx)
+          case Goodbye(ctx) =>
+            isRunning = false
+            mTimer = null
         }
       }
     }
@@ -55,18 +62,15 @@ class Geomancer extends Actor
   
   private def initialize(ctx: Context): Unit = {
     locationManager = ctx.getSystemService(Context.LOCATION_SERVICE).asInstanceOf[LocationManager]
-    val provider = locationManager.
+    provider = locationManager.
       getBestProvider(
         getCriteriaA(),
         true);
 
-    if (provider != null)
-      locationManager.requestLocationUpdates(
-        provider,
-        DEFAULT_TIMEOUT,
-        DEFAULT_RADIUS,
-        locationListener,
-        null);
+    if (provider != null) {
+      isRunning = true
+      mTimer = new TimerActor(5000, this, UpdateLocation)
+      mTimer.start() }
     else
       serviceStatus = Disabled
   }
@@ -81,6 +85,22 @@ class Geomancer extends Actor
     crit
   }
 
+  private def getLocListener(): LocationListener = {
+    new LocationListener() {
+      override def onLocationChanged(loc: Location): Unit = {
+        mLocation = loc
+        debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
+        notifyListeners(CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude()))
+      }
+
+      override def onStatusChanged(provider: String, status: Int, extras: Bundle): Unit = {}
+
+      override def onProviderEnabled(provider: String): Unit = {}
+
+      override def onProviderDisabled(provider: String): Unit = {}
+    }
+  }
+  
 }
 
 object Geomancer {
@@ -111,10 +131,24 @@ object Geomancer {
   case object GetLocation
   case class CurrentLoc(lat: Double, lon: Double)
   case object GetStatus
+  case object UpdateLocation
 
   sealed abstract class LocationServiceStatus
   case object Disabled extends LocationServiceStatus
   case object Enabled extends LocationServiceStatus
+
+  class TimerActor(val timeout: Long, val who: Actor, val reply: Any) extends Actor {
+    
+    import scala.actors._
+    
+    def act {
+      loop {
+        reactWithin(timeout) {
+          case TIMEOUT => who ! reply
+        }
+      }
+    }
+  }
 }
 
 

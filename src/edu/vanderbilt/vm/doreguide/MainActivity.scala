@@ -38,18 +38,27 @@ class MainActivity extends Activity
     setContentView(R.layout.main_activity)
     setupActionBar
     
-    Dore.initialize(this)
-    
-    mMain = new MainController(this)
-    mMain.start()
-    mMain ! Initialize(this)
-    
     getFragmentManager().
         beginTransaction().
         add(R.id.main_base_map, new MapFragment(), "base_map").
         commit(); 
   }
 
+  override def onStart(): Unit = {
+    super.onStart()
+    Dore.initialize(this)
+    
+    mMain = new MainController(this)
+    mMain.start()
+    mMain ! Initialize(this)
+  }
+  
+  override def onStop(): Unit = {
+    super.onStop()
+    mMain ! Goodbye(this)
+    Dore.goodbye(this)
+  }
+  
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
     getMenuInflater().inflate(R.menu.main, menu)
     true

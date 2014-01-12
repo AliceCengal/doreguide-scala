@@ -12,9 +12,6 @@ import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import android.widget.ListView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.views.TourView
-import edu.vanderbilt.vm.doreguide.TourList
-import edu.vanderbilt.vm.doreguide.Initialize
-import edu.vanderbilt.vm.doreguide.Dore
 import edu.vanderbilt.vm.doreguide.services.TourServer
 
 class TourTabFrag extends Fragment with ViewUtil {
@@ -56,7 +53,7 @@ class ToursController extends Actor with LogUtil {
     loop {
       react {
         case Initialize(ctx) =>
-          Dore.placeServer ! GetAllTours
+          Dore.tourServer ! GetAllTours
 
         case TourList(list) =>
           mData = list

@@ -85,6 +85,7 @@ case class TourList(list: List[Tour])
  */
 case class Goodbye(ctx: Context)
 
+case object Start
 case object Resume
 case object Pause
 case object Stop
