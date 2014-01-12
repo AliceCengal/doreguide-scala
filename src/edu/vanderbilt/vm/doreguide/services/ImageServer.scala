@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.R
+import edu.vanderbilt.vm.doreguide.Initialize
 
 /**
  * Downloads and caches images on request.

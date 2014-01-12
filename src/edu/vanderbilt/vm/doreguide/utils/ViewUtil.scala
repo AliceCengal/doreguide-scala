@@ -29,6 +29,11 @@ trait ViewUtil {
     })
   }
   
+  def run(block: => Unit): Runnable = {
+    new Runnable() {
+      override def run() = block
+    }
+  }
   
 }
 

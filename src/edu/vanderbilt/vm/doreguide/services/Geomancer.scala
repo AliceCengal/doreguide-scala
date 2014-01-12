@@ -10,6 +10,7 @@ import android.location.Location
 import java.text.DecimalFormat
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.utils.Listenable
+import edu.vanderbilt.vm.doreguide.Initialize
 
 class Geomancer extends Actor 
     with LogUtil

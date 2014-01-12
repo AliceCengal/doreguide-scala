@@ -6,6 +6,9 @@ import java.io.InputStreamReader
 import java.net.URL
 import edu.vanderbilt.vm.doreguide.container.Tour
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.services._
+import edu.vanderbilt.vm.doreguide.TourList
+import edu.vanderbilt.vm.doreguide.Initialize
 
 class TourServer extends Actor with LogUtil {
 
@@ -18,7 +21,7 @@ class TourServer extends Actor with LogUtil {
   override def act() {
     loop {
       react {
-        case GetAllTours => 
+        case GetAllTours =>
           sender ! TourList(mTourData)
           debug("Sending all Tours")
           

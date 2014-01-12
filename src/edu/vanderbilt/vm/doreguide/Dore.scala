@@ -1,4 +1,4 @@
-package edu.vanderbilt.vm.doreguide.services
+package edu.vanderbilt.vm.doreguide
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -6,6 +6,8 @@ import android.content.Context
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.container.Place
 import edu.vanderbilt.vm.doreguide.container.Tour
+import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.services._
 
 object Dore extends LogUtil {
   
@@ -60,6 +62,7 @@ object Dore extends LogUtil {
     geomancer ! Goodbye(ctx)
     imageServer ! Goodbye(ctx)
   }
+
 }
 
 /**
@@ -81,3 +84,14 @@ case class TourList(list: List[Tour])
  * persistent data and configs to storage or to server. 
  */
 case class Goodbye(ctx: Context)
+
+case object Resume
+case object Pause
+case object Stop
+case object Destroy
+
+
+
+
+
+

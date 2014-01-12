@@ -6,11 +6,14 @@ import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import edu.vanderbilt.vm.doreguide.container.Place
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.PlaceList
+import edu.vanderbilt.vm.doreguide.Initialize
 
 class PlaceServer extends Actor
     with LogUtil {
 
   import PlaceServer._
+  import edu.vanderbilt.vm.doreguide.services._
   
   private var mPlaceData: List[Place] = List.empty
   private var count: Int = 0

@@ -3,6 +3,8 @@ package edu.vanderbilt.vm.doreguide.services
 import scala.actors.Actor
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.utils.Listenable
+import edu.vanderbilt.vm.doreguide.Initialize
+import edu.vanderbilt.vm.doreguide.Goodbye
 
 
 class AgendaManager extends Actor

@@ -18,8 +18,6 @@ import android.view.MenuItem
 import edu.vanderbilt.vm.doreguide.utils.ActivityUtil
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.container.Place
-import edu.vanderbilt.vm.doreguide.services.Initialize
-import edu.vanderbilt.vm.doreguide.services.Dore
 import edu.vanderbilt.vm.doreguide.services.PlaceServer
 
 class MainActivity extends Activity
