@@ -28,6 +28,7 @@
         <activity 
             android:name="edu.vanderbilt.vm.doreguide.MainActivity"
             android:screenOrientation="portrait"
+            android:label="@string/title_activity_main"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +39,8 @@
         
         <activity
             android:name="edu.vanderbilt.vm.guide.ui.PlaceDetailer"
-            android:label="@string/title_activity_place_detail_activity" >
+            android:label="@string/title_activity_place_detailer"
+            android:screenOrientation="portrait" >
         </activity>
         
         <meta-data

@@ -1,8 +1,6 @@
 package edu.vanderbilt.vm.doreguide
 
 import scala.actors.Actor
-import edu.vanderbilt.vm.doreguide.utils.LogUtil
-import edu.vanderbilt.vm.doreguide.utils.ViewUtil
 import android.app.Fragment
 import edu.vanderbilt.vm.doreguide.container.Place
 import android.view.LayoutInflater
@@ -10,8 +8,7 @@ import android.view.ViewGroup
 import android.view.View
 import android.os.Bundle
 import android.widget.ListView
-import edu.vanderbilt.vm.doreguide.views.DataAdapter
-import edu.vanderbilt.vm.doreguide.views.PlaceView
+import edu.vanderbilt.vm.doreguide.views._
 import edu.vanderbilt.vm.doreguide.services._
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,12 +18,12 @@ import android.app.Activity
 import edu.vanderbilt.vm.doreguide.utils.RemoveListener
 import android.graphics.Bitmap
 import android.text.Html
-import edu.vanderbilt.vm.doreguide.container.MediaLocation
-import edu.vanderbilt.vm.doreguide.container.ImageMedia
-import edu.vanderbilt.vm.doreguide.container.ImageId
+import edu.vanderbilt.vm.doreguide.container._
+import edu.vanderbilt.vm.doreguide.utils._
+
 
 class AgendaTabFrag(val cont: Actor) extends Fragment
-    with ViewUtil
+    with FragmentUtil
     with LogUtil {
 
   private var mAgenda: List[Place] = List.empty
@@ -50,16 +47,12 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
 
   override def onActivityCreated(saved: Bundle) {
     super.onActivityCreated(saved)
-    debug("onActivityCreated callback")
     
-    inGroup(getView()) {
-      case (v: ListView, R.id.listView1)       => agendaList = v
-      case (v: ImageView, R.id.imageView1)     => placeImage = v
-      case (v: TextView, R.id.textView2)       => placeText = v
-      case (v: ImageButton, R.id.imageButton1) => editBtn = v
-      case (v: ImageButton, R.id.imageButton2) => deleteBtn = v
-      case _                                   => {}
-    }
+    agendaList = listView(R.id.listView1)
+    placeImage = component[ImageView](R.id.imageView1)
+    placeText = textView(R.id.textView2)
+    editBtn = component[ImageButton](R.id.imageButton1)
+    deleteBtn = component[ImageButton](R.id.imageButton2)
 
     cont ! Start
   }
@@ -91,7 +84,7 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
   }
 
   def fillCurrentPlaceBox(plc: Place): Unit = {
-    onUi(getActivity()) {
+    onUi {
       placeText.setText(Html.fromHtml(
           "<b>" + plc.name + "</b> " +
           (if (plc.description.length() > DESC_LENGTH) 
@@ -101,13 +94,13 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
   }
 
   def setImage(img: Bitmap) = {
-    onUi(getActivity()) {
+    onUi {
       placeImage.setImageBitmap(img)
     }
   }
 
   def setAgendaList(plcs: List[Place]) = {
-    onUi(getActivity()) {
+    onUi {
       agendaList.setAdapter(
         new DataAdapter(
           plcs,

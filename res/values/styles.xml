@@ -4,6 +4,7 @@
     <color name="light_gold">#ffffdc</color>
     <color name="decent_gold">#B69000</color>
     <color name="pure_gold">#F0CE2E</color>
+    <color name="white">#ffffff</color>
     
     <style name="Separator">
         <item name="android:layout_width">match_parent</item>

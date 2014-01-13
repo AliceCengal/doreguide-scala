@@ -16,13 +16,13 @@ import android.widget.TextView
 import android.app.DialogFragment
 import edu.vanderbilt.vm.doreguide.views.PlaceView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
-import edu.vanderbilt.vm.doreguide.utils.ViewUtil
 import android.widget.Toast
 import edu.vanderbilt.vm.doreguide.services.PlaceServer
 import android.widget.Button
+import edu.vanderbilt.vm.doreguide.utils.FragmentUtil
 
 class PlaceListFrag(val controller: Actor) extends Fragment
-    with ViewUtil
+    with FragmentUtil
     with LogUtil {
 
   private var mPlaceList: List[Place] = Nil
@@ -40,32 +40,10 @@ class PlaceListFrag(val controller: Actor) extends Fragment
 
   override def onActivityCreated(saved: Bundle) {
     super.onActivityCreated(saved)
-    
-    inGroup(getView()) {
-      case (v: ListView, R.id.listview1) => places = v
-      case (v, R.id.btn1) =>
-        click(v) {
-          Toast.
-            makeText(
-              getActivity(),
-              "Button1 pressed",
-              Toast.LENGTH_SHORT).
-            show()
-        }
-      case (v, R.id.btn2) =>
-        click(v) {
-          Toast.
-            makeText(
-              getActivity(),
-              "Button2 pressed",
-              Toast.LENGTH_SHORT).
-            show()
-        }
-      case _ => {}
-    }
-    
+    places = listView(R.id.listView1)
+    btn1 = button(R.id.btn1)
+    btn2 = button(R.id.btn2)
     controller ! Start
-
   }
   
   override def onStop() = {
@@ -76,7 +54,7 @@ class PlaceListFrag(val controller: Actor) extends Fragment
   override def logId = "DoreGuide::PlaceListFrag";
 
   def setPlaceList(pl: List[Place]): Unit = {
-    onUi(getActivity()) {
+    onUi {
       places.setAdapter(
           new DataAdapter(
               pl, 

@@ -41,7 +41,7 @@ class MainActivity extends Activity
     getFragmentManager().
         beginTransaction().
         add(R.id.main_base_map, new MapFragment(), "base_map").
-        commit(); 
+        commit();
   }
 
   override def onStart(): Unit = {
@@ -84,15 +84,12 @@ class MainActivity extends Activity
         debug("Nav tab selected.")
         handleTabChange(NAV_TAB)
         true
-      case _ => { false }
+      case _ => false
     }
   }
   
   private def setupActionBar {
-    mAction setDisplayShowTitleEnabled  true
-    //mAction setBackgroundDrawable       Dore.DECENT_GOLD
     mAction setSplitBackgroundDrawable  Dore.DECENT_GOLD
-    mAction setTitle                    "Vanderbilt University"
   }
   
   private def handleTabChange(inputId: Int): Unit = {
@@ -116,8 +113,7 @@ object MainActivity {
   val NAV_TAB = 3
 }
 
-class MainController(val activity: MainActivity) 
-    extends Actor
+class MainController(val activity: MainActivity) extends Actor
     with LogUtil {
   
   import PlaceServer._

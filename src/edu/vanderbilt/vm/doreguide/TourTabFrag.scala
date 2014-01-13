@@ -7,17 +7,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 import android.os.Bundle
-import edu.vanderbilt.vm.doreguide.utils.ViewUtil
-import edu.vanderbilt.vm.doreguide.utils.LogUtil
+import edu.vanderbilt.vm.doreguide.utils._
 import android.widget.ListView
 import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.views.TourView
-import edu.vanderbilt.vm.doreguide.services.TourServer
+import edu.vanderbilt.vm.doreguide.services._
 
-class TourTabFrag extends Fragment with ViewUtil {
+class TourTabFrag(val cont: Actor) extends Fragment
+    with FragmentUtil {
 
   private var mTourList: List[Tour] = List.empty
 
+  private var tourView: ListView = null
+  
   override def onCreateView(inflater: LayoutInflater,
                             container: ViewGroup,
                             saved: Bundle): View = {
@@ -26,16 +28,18 @@ class TourTabFrag extends Fragment with ViewUtil {
 
   override def onActivityCreated(saved: Bundle) {
     super.onActivityCreated(saved)
-
-    inGroup(getView()) {
-      case (v: ListView, R.id.listview1) =>
-        v.setAdapter(new DataAdapter(mTourList, TourView.getFactory(getActivity())))
-      case _ => {}
-    }
+    tourView = listView(R.id.listView1)
+    cont ! Start
   }
 
   def setTourList(list: List[Tour]): Unit = {
-    mTourList = list
+    onUi {
+      tourView.setAdapter(
+          new DataAdapter(
+              list,
+              TourView.getFactory(getActivity())));
+      tourView invalidateViews()
+    }
   }
 }
 
@@ -44,7 +48,7 @@ class ToursController extends Actor with LogUtil {
   import TourServer._
   import MainController._
 
-  private val frag = new TourTabFrag()
+  private val frag = new TourTabFrag(this)
   private var mData: List[Tour] = List.empty
 
   override def logId = "ToursController"
@@ -52,23 +56,21 @@ class ToursController extends Actor with LogUtil {
   override def act(): Unit = {
     loop {
       react {
-        case Initialize(ctx) =>
-          Dore.tourServer ! GetAllTours
+        case Initialize(ctx) => Dore.tourServer ! GetAllTours
 
-        case TourList(list) =>
-          mData = list
+        case Start           => frag.setTourList(mData)
 
-        case ShowTab =>
-          frag.setTourList(mData)
-          sender ! ShowFragment(frag)
+        case TourList(list)  => mData = list
 
-        case _ => {}
+        case ShowTab         => sender ! ShowFragment(frag)
+
+        case _               => debug("Message not understood.")
       }
     }
   }
 
   override def exceptionHandler = {
-    case e => e.printStackTrace()
+    case e => error(e.getMessage())
   }
 
 }
