@@ -19,12 +19,17 @@ import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import edu.vanderbilt.vm.doreguide.utils.ViewUtil
 import android.widget.Toast
 import edu.vanderbilt.vm.doreguide.services.PlaceServer
+import android.widget.Button
 
 class PlaceListFrag(val controller: Actor) extends Fragment
     with ViewUtil
     with LogUtil {
 
   private var mPlaceList: List[Place] = Nil
+  
+  var places: ListView = null
+  var btn1: Button = null
+  var btn2: Button = null
 
   override def onCreateView(
     inflater: LayoutInflater,
@@ -37,11 +42,7 @@ class PlaceListFrag(val controller: Actor) extends Fragment
     super.onActivityCreated(saved)
     
     inGroup(getView()) {
-      case (v: ListView, R.id.listview1) =>
-        v.setAdapter(new DataAdapter(
-          mPlaceList,
-          PlaceView.getFactory(getActivity())))
-            
+      case (v: ListView, R.id.listview1) => places = v
       case (v, R.id.btn1) =>
         click(v) {
           Toast.
@@ -62,13 +63,26 @@ class PlaceListFrag(val controller: Actor) extends Fragment
         }
       case _ => {}
     }
+    
+    controller ! Start
 
+  }
+  
+  override def onStop() = {
+    super.onStop()
+    controller ! Stop
   }
 
   override def logId = "DoreGuide::PlaceListFrag";
 
   def setPlaceList(pl: List[Place]): Unit = {
-    mPlaceList = pl;
+    onUi(getActivity()) {
+      places.setAdapter(
+          new DataAdapter(
+              pl, 
+              PlaceView.getFactory(getActivity())));
+      places.invalidateViews()
+    }
   }
 
 }

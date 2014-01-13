@@ -26,7 +26,6 @@ class Geomancer extends Actor
   private var provider: String = ""
 
   private var mTimer: Actor = null
-  private var isRunning: Boolean = false
   
   override def logId = "DoreGuide::Geomancer"
 
@@ -37,19 +36,22 @@ class Geomancer extends Actor
           case GetLocation     => sender ! CurrentLoc(mLocation.getLatitude(), mLocation.getLongitude())
           case GetStatus       => sender ! serviceStatus
           case UpdateLocation =>
-            if (isRunning) {
-              mLocation = locationManager.getLastKnownLocation(provider)
-              debug("receiving location: " + mLocation.getLatitude() + ", " + mLocation.getLongitude())
+            val newLoc = locationManager.getLastKnownLocation(provider)
+
+            if (newLoc.distanceTo(mLocation) > DEFAULT_RADIUS) {
+              mLocation = newLoc
+              debug("receiving location: " +
+                mLocation.getLatitude() + ", " +
+                mLocation.getLongitude())
               notifyListeners(
                 CurrentLoc(
                   mLocation.getLatitude(),
                   mLocation.getLongitude()))
-
             }
             
           case Initialize(ctx) => initialize(ctx)
           case Goodbye(ctx) =>
-            isRunning = false
+            mTimer ! TimerStop
             mTimer = null
         }
       }
@@ -61,14 +63,15 @@ class Geomancer extends Actor
   }
   
   private def initialize(ctx: Context): Unit = {
-    locationManager = ctx.getSystemService(Context.LOCATION_SERVICE).asInstanceOf[LocationManager]
+    locationManager = ctx.
+      getSystemService(Context.LOCATION_SERVICE).
+      asInstanceOf[LocationManager]
     provider = locationManager.
       getBestProvider(
         getCriteriaA(),
         true);
 
     if (provider != null) {
-      isRunning = true
       mTimer = new TimerActor(5000, this, UpdateLocation)
       mTimer.start() }
     else
@@ -132,6 +135,7 @@ object Geomancer {
   case class CurrentLoc(lat: Double, lon: Double)
   case object GetStatus
   case object UpdateLocation
+  case object TimerStop
 
   sealed abstract class LocationServiceStatus
   case object Disabled extends LocationServiceStatus
@@ -144,7 +148,8 @@ object Geomancer {
     def act {
       loop {
         reactWithin(timeout) {
-          case TIMEOUT => who ! reply
+          case TimerStop => this.exit()
+          case TIMEOUT   => who ! reply
         }
       }
     }

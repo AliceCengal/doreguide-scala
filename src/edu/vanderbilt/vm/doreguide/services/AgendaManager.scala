@@ -22,17 +22,19 @@ class AgendaManager extends Actor
       react {
         case Initialize(ctx) => initializeData()
         case GetUserAgenda   => sender ! Agenda(mAgenda.toList)
-        
-        case AddPlace(id) => 
+
+        case AddPlace(id) =>
           mAgenda = mAgenda + id
           notifyListeners(AgendaChanged)
-        
+
         case RemovePlace(id) =>
           mAgenda = mAgenda - id
           notifyListeners(AgendaChanged)
+
+        case AgendaStatus(id) => sender ! AgendaStatusReply(id, (mAgenda contains id))
           
-        case Goodbye         => saveData()
-        case a: Any          => debug("Message not understood: " + a)
+        case Goodbye => saveData()
+        case a: Any  => debug("Message not understood: " + a)
       }
     }
   }
@@ -53,7 +55,9 @@ class AgendaManager extends Actor
 object AgendaManager {
   case object GetUserAgenda
   case class Agenda(ids: List[Int])
-
+  case class AgendaStatus(id: Int)
+  case class AgendaStatusReply(id: Int, status: Boolean)
+  
   case class AddPlace(id: Int)
   case class RemovePlace(id: Int)
 

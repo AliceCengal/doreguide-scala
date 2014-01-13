@@ -36,6 +36,11 @@
             </intent-filter>
         </activity>
         
+        <activity
+            android:name="edu.vanderbilt.vm.guide.ui.PlaceDetailer"
+            android:label="@string/title_activity_place_detail_activity" >
+        </activity>
+        
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/maps_api_key_v2" />
