@@ -51,7 +51,7 @@ class PlaceServer extends Actor
                   calcDistance(a.latitude, a.longitude, lat, lng) <
                   calcDistance(b.latitude, b.longitude, lat, lng))
           
-          sender ! ClosestPlace(sortedByDistance(0))
+          sender ! ClosestPlace(sortedByDistance.head)
           
         case a: Any => { debug("Message not understood: " + a + " from: " + sender) }
       }
@@ -65,7 +65,7 @@ class PlaceServer extends Actor
   private def initializeData {
     val reader = new JsonReader(
       new InputStreamReader(
-        (new URL(rawDataUrl)).openConnection().getInputStream))
+        (new URL(rawDataUrl)).openConnection().getInputStream()))
 
     mPlaceData = List.empty
     reader.beginArray()
@@ -73,6 +73,7 @@ class PlaceServer extends Actor
       mPlaceData = Place.buildFromJson(reader) :: mPlaceData
     }
     reader.endArray()
+    reader.close()
   }
 
   private def calcDistance(

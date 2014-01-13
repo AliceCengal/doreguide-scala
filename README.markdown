@@ -22,8 +22,8 @@ Prerequisites
 <resources>
     <string name="maps_api_key_v2">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
 </resources>
-
 ```
+
   Get your own API key by following the instructions on this page https://developers.google.com/maps/documentation/android/start#getting_the_google_maps_android_api_v2
   and place the key in here. Please double check before your first commit to make sure that your API key is not
   published to Github.
@@ -51,4 +51,23 @@ Deploy to an Android virtual device (AVD):
 Programming Notes
 -----------------
 * In object util.LogUtil, set the variable LogEnabled to false for the production build.
+
+Architecture
+------------
+
+    Views           |Uis              |Controllers         |Services
+    ----------------|-----------------|--------------------|----------
+    DataAdapter     |MainActivity     |MainController      |Dore
+    ViewHolder      |PlaceListFrag    |PlacesController    |PlaceServer
+    PlaceView       |AgendaTabFrag    |AgendaController    |Geomancer
+    TourView        |TourTabFrag      |ToursController     |AgendaManager
+    ...             |NavigationTabFrag|NavigationCont.     |TourServer
+                    |MapFragment      |MapController       |ImageServer
+                    |...              |...                 |NodeServer
+                    |                 |                    |...
+
+
+
+
+
 

@@ -21,6 +21,9 @@ import android.app.Activity
 import edu.vanderbilt.vm.doreguide.utils.RemoveListener
 import android.graphics.Bitmap
 import android.text.Html
+import edu.vanderbilt.vm.doreguide.container.MediaLocation
+import edu.vanderbilt.vm.doreguide.container.ImageMedia
+import edu.vanderbilt.vm.doreguide.container.ImageId
 
 class AgendaTabFrag(val cont: Actor) extends Fragment
     with ViewUtil
@@ -149,10 +152,16 @@ class AgendaController extends Actor with LogUtil {
         case ClosestPlace(plc) =>
           if (plc != currentPlace) {
             currentPlace = plc
-            if (plc.medias.length > 0) Dore.imageServer ! DispatchImage(plc.medias(0).location)
             frag.fillCurrentPlaceBox(plc)
+
+            for (media <- extractFirstImage(plc.medias))
+              Dore.imageServer ! (
+                media.mediatype match {
+                  case ImageMedia => DispatchImage(media.location)
+                  case ImageId    => DispatchImageFromId(media.location.toInt)
+                })
           }
-          debug("Received closest place")
+          debug("Received closest place: " + plc)
 
         case Image(url, img) =>
           frag.setImage(img)
@@ -176,6 +185,16 @@ class AgendaController extends Actor with LogUtil {
 
   override def exceptionHandler = {
     case e => error(e.getMessage())
+  }
+  
+  private def extractFirstImage(mediaList: List[MediaLocation]): Option[MediaLocation] = {
+    val res = mediaList.
+      filter(m =>
+        m.mediatype == ImageMedia ||
+        m.mediatype == ImageId)
+        
+    if (res.length > 0) Some(res.head)
+    else None
   }
 
 }

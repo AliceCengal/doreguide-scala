@@ -34,6 +34,7 @@ object Place {
   val TAG_VIDEO     = "videoPath"
   val TAG_LAT       = "latitude"
   val TAG_LON       = "longitude"
+  val TAG_IMAGEIDS  = "imageIds"
 
   def builder: PlaceBuilder = new IPlaceBuilder
     
@@ -52,12 +53,17 @@ object Place {
             bldr.addCategory(PlaceCategory.fromName(reader.nextString()))
           reader.endArray()
         case TAG_HOURS => bldr.setHours(reader.nextString())
-        case TAG_IMAGE => bldr.addMedia(MediaLocation(ImageMedia(), reader.nextString()))
-        case TAG_AUDIO => bldr.addMedia(MediaLocation(AudioMedia(), reader.nextString()))
-        case TAG_VIDEO => bldr.addMedia(MediaLocation(VideoMedia(), reader.nextString()))
+        case TAG_IMAGE => bldr.addMedia(MediaLocation(ImageMedia, reader.nextString()))
+        case TAG_AUDIO => bldr.addMedia(MediaLocation(AudioMedia, reader.nextString()))
+        case TAG_VIDEO => bldr.addMedia(MediaLocation(VideoMedia, reader.nextString()))
         case TAG_LAT   => bldr.setLatitude(reader.nextDouble())
         case TAG_LON   => bldr.setLongitude(reader.nextDouble())
-        case _         => reader.skipValue()
+        case TAG_IMAGEIDS =>
+          reader.beginArray()
+          while (reader.hasNext())
+            bldr.addMedia(MediaLocation(ImageId, reader.nextInt().toString()))
+          reader.endArray()
+        case _ => reader.skipValue()
       }
     }
     reader.endObject()
