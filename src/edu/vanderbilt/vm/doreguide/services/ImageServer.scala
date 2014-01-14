@@ -27,28 +27,33 @@ class ImageServer extends Actor with LogUtil {
   private var mImgLoader: ImageLoader = null
   
   override def logId = "DoreGuide::ImageServer"
-  
+
   override def act(): Unit = {
-    loop { react {
-        case Initialize(ctx)         => initialize(ctx)
-        case DispatchImage(url)      => 
+    loop {
+      react {
+        case Initialize(ctx) => initialize(ctx)
+        case DispatchImage(url) =>
           debug("Received request for URL: " + url)
           sender ! Image(url, mImgLoader.loadImageSync(url))
-          
+
         case DispatchImageFromId(id) =>
           debug("Received request for id: " + id)
           val urlData = mUrlMap.get(id)
           urlData match {
-            case Some(url) => 
+            case Some(url) =>
               debug("Processing request for URL: " + url)
               sender ! Image(url, mImgLoader.loadImageSync(url))
-            case None      => sender ! Image("", defaultImage)
+            case None => sender ! Image("", defaultImage)
           }
-          
-        case _                       => debug("Message Not Understood")
-    } }
+
+        case _ => debug("Message Not Understood")
+      }
+    }
   }
-  
+
+  override def exceptionHandler = {
+    case e => error(e.getMessage())
+  }
   
   def initialize(ctx: Context): Unit = {
     defaultImage = ctx.
@@ -70,7 +75,7 @@ class ImageServer extends Actor with LogUtil {
     debug("Image bank has size: " + mUrlMap.size)
     initImageLoader(ctx)
   }
-  
+
   def insertTuple(reader: JsonReader) {
     var url = ""
     var id = -1
@@ -78,9 +83,9 @@ class ImageServer extends Actor with LogUtil {
     while (reader.hasNext()) {
       val name = reader.nextName()
       name match {
-        case "id" => id = reader.nextInt()
+        case "id"  => id = reader.nextInt()
         case "url" => url = reader.nextString()
-        case _ => reader.skipValue()
+        case _     => reader.skipValue()
       }
     }
     reader.endObject()
@@ -89,15 +94,15 @@ class ImageServer extends Actor with LogUtil {
   
   def initImageLoader(ctx: Context) {
     if (mImgLoader == null) {
-        mImgLoader = ImageLoader.getInstance();
-        val config = new ImageLoaderConfiguration.Builder(ctx)
-                .defaultDisplayImageOptions(new DisplayImageOptions.Builder()
-                        .cacheInMemory(true)
-                        .cacheOnDisc(true)
-                        .build())
-                .build();
+      mImgLoader = ImageLoader.getInstance();
+      val config = new ImageLoaderConfiguration.Builder(ctx)
+        .defaultDisplayImageOptions(new DisplayImageOptions.Builder()
+          .cacheInMemory(true)
+          .cacheOnDisc(true)
+          .build())
+        .build();
 
-        mImgLoader.init(config);
+      mImgLoader.init(config);
     }
   }
 }

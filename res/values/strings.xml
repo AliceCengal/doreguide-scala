@@ -8,6 +8,6 @@
   <string name="menu_sort_category">Sort: by category</string>
   
   <string name="title_activity_main">Vanderbilt</string>
-  <string name="title_activity_place_detailer">Place Details</string>
+  <string name="title_activity_place_detailer">Campus Location</string>
   
 </resources>

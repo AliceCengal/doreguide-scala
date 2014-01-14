@@ -10,6 +10,7 @@ import android.widget._
 import edu.vanderbilt.vm.doreguide.container._
 import android.graphics.Bitmap
 import edu.vanderbilt.vm.doreguide.services._
+import android.view.View
 
 class PlaceDetailer extends Activity
     with ActivityUtil {
@@ -36,13 +37,15 @@ class PlaceDetailer extends Activity
 
   def setPlace(plc: Place): Unit = {
     onUi {
-      
+      placeName.setText(plc.name)
+      placeDesc.setText(plc.description)
     }
   }
   
   def setImage(img: Bitmap): Unit = {
     onUi {
-      
+      image.setImageBitmap(img)
+      image.setVisibility(View.VISIBLE)
     }
   }
   
@@ -81,10 +84,10 @@ object PlaceDetailer {
               Dore.imageServer ! DispatchImageFromId(
                 mediaIds(0).location.toInt);
             
-            activity.setPlace(plc)
-            
+            activity setPlace plc
+
           case Image(url, img) => activity.setImage(img)
-          case a: Any => debug("Message unknown: " + a)
+          case a: Any          => debug("Message unknown: " + a)
         }
       }
 
