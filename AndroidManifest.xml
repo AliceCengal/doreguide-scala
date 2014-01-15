@@ -38,7 +38,7 @@
         </activity>
         
         <activity
-            android:name="edu.vanderbilt.vm.guide.ui.PlaceDetailer"
+            android:name="edu.vanderbilt.vm.doreguide.PlaceDetailer"
             android:label="@string/title_activity_place_detailer"
             android:screenOrientation="portrait" >
         </activity>

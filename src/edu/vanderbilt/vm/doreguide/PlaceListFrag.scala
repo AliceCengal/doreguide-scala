@@ -20,6 +20,10 @@ import android.widget.Toast
 import edu.vanderbilt.vm.doreguide.services.PlaceServer
 import android.widget.Button
 import edu.vanderbilt.vm.doreguide.utils.FragmentUtil
+import edu.vanderbilt.vm.doreguide.views.IndexedPlaceAdapter
+import edu.vanderbilt.vm.doreguide.views.PlaceItemView
+import edu.vanderbilt.vm.doreguide.views.PlaceHeaderView
+import edu.vanderbilt.vm.doreguide.views.DataIndexer
 
 class PlaceListFrag(val controller: Actor) extends Fragment
     with FragmentUtil
@@ -43,6 +47,10 @@ class PlaceListFrag(val controller: Actor) extends Fragment
     places = listView(R.id.listView1)
     btn1 = button(R.id.btn1)
     btn2 = button(R.id.btn2)
+  }
+  
+  override def onStart() = {
+    super.onStart()
     controller ! Start
   }
   
@@ -56,9 +64,11 @@ class PlaceListFrag(val controller: Actor) extends Fragment
   def setPlaceList(pl: List[Place]): Unit = {
     onUi {
       places.setAdapter(
-          new DataAdapter(
+          new IndexedPlaceAdapter(
               pl, 
-              PlaceView.getFactory(getActivity())));
+              PlaceItemView.getFactory(getActivity()),
+              PlaceHeaderView.getFactory(getActivity()),
+              DataIndexer.alphabetical(pl)));
       places.invalidateViews()
     }
   }
@@ -84,7 +94,7 @@ class PlaceController extends Actor
     loop {
       react {
         case Initialize(ctx) =>
-          debug("Initialization.")
+          //debug("Initialization.")
           Dore.placeServer ! GetAllPlaces
 
         case PlaceList(list) =>
@@ -92,10 +102,11 @@ class PlaceController extends Actor
           debug("Received data")
 
         case ShowTab =>
-          frag.setPlaceList(mData)
+          //frag.setPlaceList(mData)
           sender ! ShowFragment(frag)
           debug("Sending Fragment for display")
 
+        case Start => frag.setPlaceList(mData)
         case HideTab => debug("HideTab message received.")
         case _       => debug("Message not understood")
       }

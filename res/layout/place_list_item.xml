@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/lightgold_to_darkgold"
+    android:orientation="horizontal"
+    android:padding="8dp" >
+
+    <ImageView
+        android:id="@+id/placelist_item_thumbnail"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:src="@drawable/device_access_camera" />
+
+    <TextView
+        android:id="@+id/placelist_item_title"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_margin="4dip"
+        android:layout_weight="100"
+        android:gravity="center_vertical"
+        android:text="PlaceName"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/placelist_item_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="4dip"
+        android:gravity="center"
+        android:text="dist"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -14,7 +14,6 @@
     for this RelativeLayout. The map should stay fullscreen 
     in the background, but this overlay could be staggered to
     the top left or top right.
-    
      _____________________________________
     |__University_________________________|
     |  ______________________     .''''   |
@@ -32,6 +31,9 @@
       android:id="@+id/main_base_overlay"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_margin="16dp"></RelativeLayout>
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp"></RelativeLayout>
     
 </FrameLayout>

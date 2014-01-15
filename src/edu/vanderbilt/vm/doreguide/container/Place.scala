@@ -55,7 +55,8 @@ object Place {
         case TAG_HOURS => bldr.setHours(reader.nextString())
         case TAG_IMAGE => 
           // We no longer want to use this.
-          //bldr.addMedia(MediaLocation(ImageMedia, reader.nextString()))
+          // bldr.addMedia(MediaLocation(ImageMedia, reader.nextString()))
+          reader.skipValue()
         case TAG_AUDIO => bldr.addMedia(MediaLocation(AudioMedia, reader.nextString()))
         case TAG_VIDEO => bldr.addMedia(MediaLocation(VideoMedia, reader.nextString()))
         case TAG_LAT   => bldr.setLatitude(reader.nextDouble())

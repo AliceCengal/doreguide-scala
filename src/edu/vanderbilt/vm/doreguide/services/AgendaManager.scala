@@ -20,21 +20,23 @@ class AgendaManager extends Actor
   override def act {
     loop {
       react {
-        case Initialize(ctx) => initializeData()
-        case GetUserAgenda   => sender ! Agenda(mAgenda.toList)
+        listenerHandler orElse {
+          case Initialize(ctx) => initializeData()
+          case GetUserAgenda   => sender ! Agenda(mAgenda.toList)
 
-        case AddPlace(id) =>
-          mAgenda = mAgenda + id
-          notifyListeners(AgendaChanged)
+          case AddPlace(id) =>
+            mAgenda = mAgenda + id
+            notifyListeners(AgendaChanged)
 
-        case RemovePlace(id) =>
-          mAgenda = mAgenda - id
-          notifyListeners(AgendaChanged)
+          case RemovePlace(id) =>
+            mAgenda = mAgenda - id
+            notifyListeners(AgendaChanged)
 
-        case AgendaStatus(id) => sender ! AgendaStatusReply(id, (mAgenda contains id))
-          
-        case Goodbye => saveData()
-        case a: Any  => debug("Message not understood: " + a)
+          case AgendaStatus(id) => sender ! AgendaStatusReply(id, (mAgenda contains id))
+
+          case Goodbye          => saveData()
+          case a: Any           => debug("Message not understood: " + a)
+        }
       }
     }
   }

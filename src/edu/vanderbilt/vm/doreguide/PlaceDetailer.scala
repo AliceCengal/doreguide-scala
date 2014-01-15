@@ -45,6 +45,8 @@ class PlaceDetailer extends Activity
   def setImage(img: Bitmap): Unit = {
     onUi {
       image.setImageBitmap(img)
+    }
+    onUi {
       image.setVisibility(View.VISIBLE)
     }
   }
@@ -55,8 +57,11 @@ object PlaceDetailer {
 
   val PLACE_ID_EXTRA = "placeIdExtra"
 
+  /**
+   * Open the Detail page using this method. Pass in the id of the Place that is to be detailed.
+   */
   def open(ctx: Context, placeId: Int): Unit = {
-    val i = new Intent(ctx, PlaceDetailer.getClass())
+    val i = new Intent(ctx, classOf[PlaceDetailer])
     i.putExtra(PLACE_ID_EXTRA, placeId)
     ctx startActivity i
   }
@@ -82,7 +87,7 @@ object PlaceDetailer {
             val mediaIds = plc.medias.filter((m) => m.mediatype == ImageId)
             if (mediaIds.length > 0)
               Dore.imageServer ! DispatchImageFromId(
-                mediaIds(0).location.toInt);
+                mediaIds.head.location.toInt);
             
             activity setPlace plc
 

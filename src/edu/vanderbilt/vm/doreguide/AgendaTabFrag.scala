@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.text.Html
 import edu.vanderbilt.vm.doreguide.container._
 import edu.vanderbilt.vm.doreguide.utils._
+import android.widget.LinearLayout
 
 
 class AgendaTabFrag(val cont: Actor) extends Fragment
@@ -29,9 +30,9 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
   private var mAgenda: List[Place] = List.empty
 
   var agendaList: ListView = null
+  var currentView: LinearLayout = null
   var placeImage: ImageView = null
   var placeText: TextView = null
-
   var editBtn: ImageButton = null
   var deleteBtn: ImageButton = null
   
@@ -49,6 +50,7 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
     super.onActivityCreated(saved)
     
     agendaList = listView(R.id.listView1)
+    currentView = component[LinearLayout](R.id.linearLayout1)
     placeImage = component[ImageView](R.id.imageView1)
     placeText = textView(R.id.textView2)
     editBtn = component[ImageButton](R.id.imageButton1)
@@ -57,7 +59,7 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
     cont ! Start
   }
 
-  override def onResume() = {
+  /* override def onResume() = {
     super.onResume()
     debug("onResume callback")
   }
@@ -65,7 +67,7 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
   override def onPause() = {
     super.onPause()
     debug("onPause callback")
-  }
+  } */
   
   override def onStop() = {
     super.onStop()
@@ -73,7 +75,7 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
     cont ! Stop
   }
   
-  override def onAttach(act: Activity) = {
+  /* override def onAttach(act: Activity) = {
     super.onAttach(act)
     debug("onAdded callback")
   }
@@ -81,7 +83,7 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
   override def onDetach() = {
     super.onDetach()
     debug("onDetach callback")
-  }
+  } */
 
   def fillCurrentPlaceBox(plc: Place): Unit = {
     onUi {
@@ -89,7 +91,9 @@ class AgendaTabFrag(val cont: Actor) extends Fragment
           "<b>" + plc.name + "</b> " +
           (if (plc.description.length() > DESC_LENGTH) 
             plc.description.substring(0, DESC_LENGTH) + "..." 
-            else plc.description)))
+            else plc.description)));
+      
+      click(currentView) { PlaceDetailer.open(getActivity(), plc.uniqueId) }
     }
   }
 

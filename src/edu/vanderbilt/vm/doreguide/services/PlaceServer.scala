@@ -46,6 +46,9 @@ class PlaceServer extends Actor
           sender ! PlaceList(result)
 
         case FindClosestPlace(lat, lng) =>
+          // Sort the Places from closest to farthest, then return
+          // the first element of the resulting List, which would be
+          // the closest Place to given point.
           val sortedByDistance = mPlaceData.sortWith(
               (a,b) =>
                   calcDistance(a.latitude, a.longitude, lat, lng) <
@@ -53,7 +56,7 @@ class PlaceServer extends Actor
           
           sender ! ClosestPlace(sortedByDistance.head)
           
-        case a: Any => { debug("Message not understood: " + a + " from: " + sender) }
+        case a: Any => debug("Message not understood: " + a + " from: " + sender)
       }
     }
   }
@@ -76,14 +79,16 @@ class PlaceServer extends Actor
     reader.close()
   }
 
+  // Simple pythagorean distance calculation, which should be okay for small distances.
   private def calcDistance(
       lat1: Double, 
       lng1: Double, 
       lat2: Double, 
       lng2: Double): Double = {
-    Math.sqrt(
-        Math.pow(lat2 - lat1, 2) +
-        Math.pow(lng2 - lng1, 2))
+    import Math._
+    sqrt(
+        pow(lat2 - lat1, 2) +
+        pow(lng2 - lng1, 2))
   }
   
 }
