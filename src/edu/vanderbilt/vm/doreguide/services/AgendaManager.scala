@@ -34,7 +34,7 @@ class AgendaManager extends Actor
 
           case AgendaStatus(id) => sender ! AgendaStatusReply(id, (mAgenda contains id))
 
-          case Goodbye          => saveData()
+          case Goodbye(ctx)     => saveData()
           case a: Any           => debug("Message not understood: " + a)
         }
       }

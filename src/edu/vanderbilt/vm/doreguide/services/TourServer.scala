@@ -9,6 +9,7 @@ import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.services._
 import edu.vanderbilt.vm.doreguide.TourList
 import edu.vanderbilt.vm.doreguide.Initialize	
+import edu.vanderbilt.vm.doreguide.Goodbye
 
 class TourServer extends Actor with LogUtil {
 
@@ -40,6 +41,8 @@ class TourServer extends Actor with LogUtil {
             yield tour;
           debug("Found " + result.length + ", expected " + ids.length + " matches.")
           sender ! TourList(result)
+
+        case Goodbye(ctx)    =>
         case Initialize(ctx) => initialize
       }
     }

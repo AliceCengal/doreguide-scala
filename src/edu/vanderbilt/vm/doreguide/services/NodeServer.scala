@@ -5,7 +5,7 @@ import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
 import java.net.URL
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
-import edu.vanderbilt.vm.doreguide.Initialize
+import edu.vanderbilt.vm.doreguide._
 
 
 class NodeServer extends Actor with LogUtil {
@@ -16,6 +16,7 @@ class NodeServer extends Actor with LogUtil {
     loop {
       react {
         case Initialize(ctx) => initialize
+        case Goodbye(ctx)    =>
         case a: Any          => debug("Message not understood: " + a)
       }
     }

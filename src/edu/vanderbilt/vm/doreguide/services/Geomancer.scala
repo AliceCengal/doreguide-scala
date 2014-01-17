@@ -37,22 +37,22 @@ class Geomancer extends Actor
           case GetStatus       => sender ! serviceStatus
           case UpdateLocation =>
             val newLoc = locationManager.getLastKnownLocation(provider)
+            notifyListeners(
+              CurrentLoc(
+                newLoc.getLatitude(),
+                newLoc.getLongitude()))
 
             if (newLoc.distanceTo(mLocation) > DEFAULT_RADIUS) {
               mLocation = newLoc
               debug("receiving location: " +
                 mLocation.getLatitude() + ", " +
                 mLocation.getLongitude())
-              notifyListeners(
-                CurrentLoc(
-                  mLocation.getLatitude(),
-                  mLocation.getLongitude()))
             }
             
           case Initialize(ctx) => initialize(ctx)
           case Goodbye(ctx) =>
-            mTimer ! TimerStop
-            mTimer = null
+            //mTimer ! TimerStop
+            //mTimer = null
         }
       }
     }

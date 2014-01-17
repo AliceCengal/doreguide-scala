@@ -6,7 +6,7 @@ import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.R
-import edu.vanderbilt.vm.doreguide.Initialize
+import edu.vanderbilt.vm.doreguide._
 import scala.collection.mutable
 import com.google.gson.stream.JsonReader
 import java.io.InputStreamReader
@@ -45,8 +45,9 @@ class ImageServer extends Actor with LogUtil {
               sender ! Image(url, mImgLoader.loadImageSync(url))
             case None => sender ! Image("", defaultImage)
           }
+        case Goodbye =>
 
-        case _ => debug("Message Not Understood")
+        case a: Any  => debug("Message Not Understood" + a)
       }
     }
   }

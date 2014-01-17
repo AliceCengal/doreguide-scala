@@ -8,6 +8,7 @@ import edu.vanderbilt.vm.doreguide.container.Place
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import edu.vanderbilt.vm.doreguide.PlaceList
 import edu.vanderbilt.vm.doreguide.Initialize
+import edu.vanderbilt.vm.doreguide.Goodbye
 
 class PlaceServer extends Actor
     with LogUtil {
@@ -32,11 +33,11 @@ class PlaceServer extends Actor
         case GetPlaceWithId(id) =>
           debug("Sending Place with id " + id)
           val result = mPlaceData.filter(p => p.uniqueId == id);
-          debug("There are " + result.length + "matches. Expected 1 match")
+          debug("There are " + result.length + " matches. Expected 1 match")
           sender ! PlaceList(result);
           
         case GetPlacesIdRange(ids) =>
-          debug("Sending Places with ids: " + ids.mkString)
+          debug("Sending Places with ids: " + ids.mkString(", "))
           val result = for (
               id <- ids;
               place <- mPlaceData
@@ -56,7 +57,8 @@ class PlaceServer extends Actor
           
           sender ! ClosestPlace(sortedByDistance.head)
           
-        case a: Any => debug("Message not understood: " + a + " from: " + sender)
+        case Goodbye(ctx) =>
+        case a: Any       => debug("Message not understood: " + a + " from: " + sender)
       }
     }
   }

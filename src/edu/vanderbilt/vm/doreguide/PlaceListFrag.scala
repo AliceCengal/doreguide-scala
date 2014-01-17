@@ -19,6 +19,8 @@ import edu.vanderbilt.vm.doreguide.services._
 import android.widget.Button
 import edu.vanderbilt.vm.doreguide.utils.FragmentUtil
 import edu.vanderbilt.vm.doreguide.views._
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.AdapterView
 
 class PlaceListFrag(val controller: Actor) extends Fragment
     with FragmentUtil
@@ -83,6 +85,11 @@ class PlaceListFrag(val controller: Actor) extends Fragment
             PlaceItemView.getFactory(getActivity()),
             PlaceHeaderView.getFactory(getActivity()),
             DataIndexer.alphabetical(pl)));
+        places.setOnItemClickListener(new OnItemClickListener() {
+          override def onItemClick(parent: AdapterView[_], view: View, position: Int, id: Long) {
+            if (id > -1) PlaceDetailer.open(getActivity(), id.toInt)
+          }
+        })
         places.invalidateViews()
       }
   }

@@ -11,6 +11,7 @@ import edu.vanderbilt.vm.doreguide.container._
 import android.graphics.Bitmap
 import edu.vanderbilt.vm.doreguide.services._
 import android.view.View
+import android.text.Html
 
 class PlaceDetailer extends Activity
     with ActivityUtil {
@@ -20,6 +21,10 @@ class PlaceDetailer extends Activity
   var image: ImageView = null
   var placeName: TextView = null
   var placeDesc: TextView = null
+  var placeCat: TextView = null
+  var placeHours: TextView = null
+  var placeGeo: TextView = null
+  var placeMedias: TextView = null
   
   var cont: Actor = new Controller(this).start()
   
@@ -30,6 +35,10 @@ class PlaceDetailer extends Activity
     image = component[ImageView](R.id.imageView1)
     placeName = textView(R.id.textView1)
     placeDesc = textView(R.id.textView2)
+    placeCat = textView(R.id.textView3)
+    placeHours = textView(R.id.textView4)
+    placeGeo = textView(R.id.textView5)
+    placeMedias = textView(R.id.textView6)
     
     val id = getIntent().getIntExtra(PLACE_ID_EXTRA, 1)
     cont ! FetchMe(id)
@@ -38,16 +47,18 @@ class PlaceDetailer extends Activity
   def setPlace(plc: Place): Unit = {
     onUi {
       placeName.setText(plc.name)
-      placeDesc.setText(plc.description)
+      placeDesc.setText(Html.fromHtml(plc.description));
+      
+      placeCat.setText(Html.fromHtml("<b>Category:</b> " + plc.categories.map(c => c.name).mkString(", ")))
+      placeHours.setText(Html.fromHtml("<b>Hours:</b> " + plc.hours))
+      placeGeo.setText(Html.fromHtml("<b>Geopoint:</b> " + plc.latitude + ", " + plc.longitude))
+      placeMedias.setText(Html.fromHtml("<em>" + plc.medias.length + " medias available." + "</em>"))
     }
   }
   
   def setImage(img: Bitmap): Unit = {
     onUi {
       image.setImageBitmap(img)
-    }
-    onUi {
-      image.setVisibility(View.VISIBLE)
     }
   }
   
@@ -91,7 +102,9 @@ object PlaceDetailer {
             
             activity setPlace plc
 
-          case Image(url, img) => activity.setImage(img)
+          case Image(url, img) => 
+            activity.setImage(img)
+            debug("Setting image")
           case a: Any          => debug("Message unknown: " + a)
         }
       }

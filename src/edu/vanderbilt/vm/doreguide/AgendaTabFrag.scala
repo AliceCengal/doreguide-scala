@@ -13,9 +13,8 @@ import edu.vanderbilt.vm.doreguide.services._
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ImageButton
-import edu.vanderbilt.vm.doreguide.utils.AddListener
+import edu.vanderbilt.vm.doreguide.utils.Listenable._
 import android.app.Activity
-import edu.vanderbilt.vm.doreguide.utils.RemoveListener
 import android.graphics.Bitmap
 import android.text.Html
 import edu.vanderbilt.vm.doreguide.container._
@@ -134,13 +133,14 @@ class AgendaController extends Actor with LogUtil {
         case Initialize(ctx) => {}
         
         case Start =>
+          Dore.geomancer ! GetLocation
           Dore.geomancer ! AddListener(this)
           Dore.agendaManager ! GetUserAgenda
           debug("Received Start signal from fragment")
 
         case CurrentLoc(lat, lng) =>
           Dore.placeServer ! FindClosestPlace(lat, lng)
-          debug("Received Current location")
+          //debug("Received Current location")
 
         case Agenda(ids) =>
           Dore.placeServer ! GetPlacesIdRange(ids)
@@ -158,7 +158,7 @@ class AgendaController extends Actor with LogUtil {
                   case ImageId    => DispatchImageFromId(media.location.toInt)
                 })
           }
-          debug("Received closest place: " + plc)
+          //debug("Received closest place: " + plc)
 
         case Image(url, img) =>
           frag.setImage(img)
