@@ -122,6 +122,8 @@ object Geomancer {
 
   val DEFAULT_TIMEOUT = 5000
   val DEFAULT_RADIUS = 5
+  
+  val EARTH_RADIUS = 6378100 // meters
 
   def getDistanceString(distanceInMeter: Double): String = {
     val distanceInFeet = distanceInMeter * FEET_PER_METER
@@ -131,6 +133,23 @@ object Geomancer {
       new DecimalFormat("#.##").format(distanceInFeet / FEET_PER_MILE) + " mi"
   }
 
+  def calcDistance(
+    lat1: Double,
+    lng1: Double,
+    lat2: Double,
+    lng2: Double): Double = {
+    import Math._
+    
+    val lat1R = toRadians(lat1)
+    val lat2R = toRadians(lat2)
+    val dLatR = abs(lat2R - lat1R)
+    val dLngR = abs(toRadians(lng2 - lng1))
+    val a = pow(sin(dLatR / 2), 2) +
+      cos(lat1R) * cos(lat2R) * sin(dLngR / 2) * sin(dLngR / 2)
+    
+    2 * atan2(sqrt(a), sqrt(1 - a)) * EARTH_RADIUS
+  }
+  
   case object GetLocation
   case class CurrentLoc(lat: Double, lon: Double)
   case object GetStatus

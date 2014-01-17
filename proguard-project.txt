@@ -11,6 +11,7 @@
 -dontpreverify
 
 -dontwarn scala.**
+-dontwarn edu.vanderbilt.vm.doreguide.**
 
 -dontnote javax.xml.**
 -dontnote org.w3c.dom.**

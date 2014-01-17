@@ -14,7 +14,7 @@ class PlaceServer extends Actor
 
   import PlaceServer._
   import edu.vanderbilt.vm.doreguide.services._
-  
+  import Geomancer._
   private var mPlaceData: List[Place] = List.empty
   private var count: Int = 0
 
@@ -79,18 +79,6 @@ class PlaceServer extends Actor
     reader.close()
   }
 
-  // Simple pythagorean distance calculation, which should be okay for small distances.
-  private def calcDistance(
-      lat1: Double, 
-      lng1: Double, 
-      lat2: Double, 
-      lng2: Double): Double = {
-    import Math._
-    sqrt(
-        pow(lat2 - lat1, 2) +
-        pow(lng2 - lng1, 2))
-  }
-  
 }
 
 object PlaceServer {

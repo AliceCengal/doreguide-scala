@@ -36,7 +36,7 @@ class IndexedPlaceAdapter(
         if (convView == null ||
             convView.getTag().asInstanceOf[(Int, ViewHolder)]._1 != 0) {
           val h = headerFactory.createHolder()
-          h.getView.setTag((1, h))
+          h.getView.setTag((0, h))
           h
         }
         else convView.getTag().asInstanceOf[(Int, ViewHolder)]._2
@@ -50,7 +50,7 @@ class IndexedPlaceAdapter(
         if (convView == null ||
             convView.getTag().asInstanceOf[(Int, ViewHolder)]._1 != 1) {
           val h = itemFactory.createHolder()
-          h.getView.setTag((2, h))
+          h.getView.setTag((1, h))
           h
         }
         else convView.getTag().asInstanceOf[(Int, ViewHolder)]._2

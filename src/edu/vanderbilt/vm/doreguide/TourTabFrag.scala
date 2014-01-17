@@ -62,7 +62,7 @@ class ToursController extends Actor with LogUtil {
 
         case TourList(list)  => mData = list
 
-        case ShowTab         => sender ! ShowFragment(frag)
+        case ShowTab         => //sender ! ShowFragment(frag)
 
         case _               => debug("Message not understood.")
       }

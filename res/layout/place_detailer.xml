@@ -9,7 +9,8 @@
         android:animateLayoutChanges="true"
         android:background="@color/light_gold"
         android:orientation="vertical"
-        android:padding="4dp" >
+        android:padding="4dp"
+        android:visibility="gone" >
 
         <edu.vanderbilt.vm.doreguide.views.AspectRatioImageView
             android:id="@+id/imageView1"

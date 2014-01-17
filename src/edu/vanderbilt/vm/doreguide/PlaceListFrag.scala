@@ -14,22 +14,18 @@ import edu.vanderbilt.vm.doreguide.container.Place
 import edu.vanderbilt.vm.doreguide.utils.LogUtil
 import android.widget.TextView
 import android.app.DialogFragment
-import edu.vanderbilt.vm.doreguide.views.PlaceView
-import edu.vanderbilt.vm.doreguide.views.DataAdapter
 import android.widget.Toast
-import edu.vanderbilt.vm.doreguide.services.PlaceServer
+import edu.vanderbilt.vm.doreguide.services._
 import android.widget.Button
 import edu.vanderbilt.vm.doreguide.utils.FragmentUtil
-import edu.vanderbilt.vm.doreguide.views.IndexedPlaceAdapter
-import edu.vanderbilt.vm.doreguide.views.PlaceItemView
-import edu.vanderbilt.vm.doreguide.views.PlaceHeaderView
-import edu.vanderbilt.vm.doreguide.views.DataIndexer
+import edu.vanderbilt.vm.doreguide.views._
 
 class PlaceListFrag(val controller: Actor) extends Fragment
     with FragmentUtil
     with LogUtil {
 
   private var mPlaceList: List[Place] = Nil
+  private var toggleSort = 0
   
   var places: ListView = null
   var btn1: Button = null
@@ -47,6 +43,22 @@ class PlaceListFrag(val controller: Actor) extends Fragment
     places = listView(R.id.listView1)
     btn1 = button(R.id.btn1)
     btn2 = button(R.id.btn2)
+
+    click(btn2) {
+      toggleSort = (toggleSort + 1) % 3
+      places.setAdapter(new IndexedPlaceAdapter(
+        mPlaceList,
+        PlaceItemView.getFactory(getActivity()),
+        PlaceHeaderView.getFactory(getActivity()),
+        toggleSort match {
+          case 0 => DataIndexer.alphabetical(mPlaceList)
+          case 1 => DataIndexer.categorical(mPlaceList)
+          case 2 => DataIndexer.pythagorean(
+            mPlaceList,
+            (Geomancer.DEFAULT_LATITUDE, Geomancer.DEFAULT_LONGITUDE))
+        }))
+    }
+    
   }
   
   override def onStart() = {
@@ -62,15 +74,17 @@ class PlaceListFrag(val controller: Actor) extends Fragment
   override def logId = "DoreGuide::PlaceListFrag";
 
   def setPlaceList(pl: List[Place]): Unit = {
-    onUi {
-      places.setAdapter(
+    if (mPlaceList.length == 0)
+      onUi {
+        mPlaceList = pl
+        places.setAdapter(
           new IndexedPlaceAdapter(
-              pl, 
-              PlaceItemView.getFactory(getActivity()),
-              PlaceHeaderView.getFactory(getActivity()),
-              DataIndexer.alphabetical(pl)));
-      places.invalidateViews()
-    }
+            pl,
+            PlaceItemView.getFactory(getActivity()),
+            PlaceHeaderView.getFactory(getActivity()),
+            DataIndexer.alphabetical(pl)));
+        places.invalidateViews()
+      }
   }
 
 }
@@ -102,7 +116,6 @@ class PlaceController extends Actor
           debug("Received data")
 
         case ShowTab =>
-          //frag.setPlaceList(mData)
           sender ! ShowFragment(frag)
           debug("Sending Fragment for display")
 
